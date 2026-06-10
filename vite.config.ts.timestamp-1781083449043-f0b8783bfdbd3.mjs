@@ -1,0 +1,22 @@
+// vite.config.ts
+import path from "path";
+import react from "file:///sessions/friendly-confident-albattani/mnt/Dashboard%20Odontix/odontix-src/node_modules/@vitejs/plugin-react/dist/index.js";
+import { defineConfig } from "file:///sessions/friendly-confident-albattani/mnt/Dashboard%20Odontix/odontix-src/node_modules/vite/dist/node/index.js";
+import { viteSingleFile } from "file:///sessions/friendly-confident-albattani/mnt/Dashboard%20Odontix/odontix-src/node_modules/vite-plugin-singlefile/dist/esm/index.js";
+var __vite_injected_original_dirname = "/sessions/friendly-confident-albattani/mnt/Dashboard Odontix/odontix-src";
+var vite_config_default = defineConfig({
+  plugins: [react(), viteSingleFile()],
+  resolve: {
+    alias: {
+      "@": path.resolve(__vite_injected_original_dirname, "./src")
+    }
+  },
+  build: {
+    target: "esnext",
+    assetsInlineLimit: 1e8
+  }
+});
+export {
+  vite_config_default as default
+};
+//# sourceMappingURL=data:application/json;base64,ewogICJ2ZXJzaW9uIjogMywKICAic291cmNlcyI6IFsidml0ZS5jb25maWcudHMiXSwKICAic291cmNlc0NvbnRlbnQiOiBbImNvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9kaXJuYW1lID0gXCIvc2Vzc2lvbnMvZnJpZW5kbHktY29uZmlkZW50LWFsYmF0dGFuaS9tbnQvRGFzaGJvYXJkIE9kb250aXgvb2RvbnRpeC1zcmNcIjtjb25zdCBfX3ZpdGVfaW5qZWN0ZWRfb3JpZ2luYWxfZmlsZW5hbWUgPSBcIi9zZXNzaW9ucy9mcmllbmRseS1jb25maWRlbnQtYWxiYXR0YW5pL21udC9EYXNoYm9hcmQgT2RvbnRpeC9vZG9udGl4LXNyYy92aXRlLmNvbmZpZy50c1wiO2NvbnN0IF9fdml0ZV9pbmplY3RlZF9vcmlnaW5hbF9pbXBvcnRfbWV0YV91cmwgPSBcImZpbGU6Ly8vc2Vzc2lvbnMvZnJpZW5kbHktY29uZmlkZW50LWFsYmF0dGFuaS9tbnQvRGFzaGJvYXJkJTIwT2RvbnRpeC9vZG9udGl4LXNyYy92aXRlLmNvbmZpZy50c1wiO2ltcG9ydCBwYXRoIGZyb20gXCJwYXRoXCI7XG5pbXBvcnQgcmVhY3QgZnJvbSBcIkB2aXRlanMvcGx1Z2luLXJlYWN0XCI7XG5pbXBvcnQgeyBkZWZpbmVDb25maWcgfSBmcm9tIFwidml0ZVwiO1xuaW1wb3J0IHsgdml0ZVNpbmdsZUZpbGUgfSBmcm9tIFwidml0ZS1wbHVnaW4tc2luZ2xlZmlsZVwiO1xuXG5leHBvcnQgZGVmYXVsdCBkZWZpbmVDb25maWcoe1xuICBwbHVnaW5zOiBbcmVhY3QoKSwgdml0ZVNpbmdsZUZpbGUoKV0sXG4gIHJlc29sdmU6IHtcbiAgICBhbGlhczoge1xuICAgICAgXCJAXCI6IHBhdGgucmVzb2x2ZShfX2Rpcm5hbWUsIFwiLi9zcmNcIiksXG4gICAgfSxcbiAgfSxcbiAgYnVpbGQ6IHtcbiAgICB0YXJnZXQ6IFwiZXNuZXh0XCIsXG4gICAgYXNzZXRzSW5saW5lTGltaXQ6IDEwMDAwMDAwMCxcbiAgfSxcbn0pO1xuIl0sCiAgIm1hcHBpbmdzIjogIjtBQUE0WSxPQUFPLFVBQVU7QUFDN1osT0FBTyxXQUFXO0FBQ2xCLFNBQVMsb0JBQW9CO0FBQzdCLFNBQVMsc0JBQXNCO0FBSC9CLElBQU0sbUNBQW1DO0FBS3pDLElBQU8sc0JBQVEsYUFBYTtBQUFBLEVBQzFCLFNBQVMsQ0FBQyxNQUFNLEdBQUcsZUFBZSxDQUFDO0FBQUEsRUFDbkMsU0FBUztBQUFBLElBQ1AsT0FBTztBQUFBLE1BQ0wsS0FBSyxLQUFLLFFBQVEsa0NBQVcsT0FBTztBQUFBLElBQ3RDO0FBQUEsRUFDRjtBQUFBLEVBQ0EsT0FBTztBQUFBLElBQ0wsUUFBUTtBQUFBLElBQ1IsbUJBQW1CO0FBQUEsRUFDckI7QUFDRixDQUFDOyIsCiAgIm5hbWVzIjogW10KfQo=

@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background-color: #0d1018;
+  color: #f0f0f5;
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(59,110,232,0.3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(59,110,232,0.5); }
+
+h1, h2, h3, .font-display {
+  font-family: 'Manrope', system-ui, sans-serif;
+}
+
+:root {
+  --background:          220 28% 8%;
+  --foreground:          230 15% 94%;
+  --card:                222 30% 11%;
+  --card-foreground:     230 15% 94%;
+  --popover:             222 33% 10%;
+  --popover-foreground:  230 15% 94%;
+  --primary:             225 78% 57%;
+  --primary-foreground:  0 0% 100%;
+  --secondary:           222 28% 16%;
+  --secondary-foreground: 230 15% 80%;
+  --muted:               222 28% 14%;
+  --muted-foreground:    220 12% 60%;
+  --accent:              225 78% 57%;
+  --accent-foreground:   0 0% 100%;
+  --destructive:         0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --border:              225 40% 18%;
+  --input:               222 28% 16%;
+  --ring:                225 78% 57%;
+  --radius: 0.875rem;
+}
