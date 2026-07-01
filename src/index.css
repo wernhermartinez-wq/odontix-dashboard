@@ -10,43 +10,46 @@
 
 body {
   margin: 0;
-  background-color: #0d1018;
-  color: #f0f0f5;
+  background-color: #f4f6f8;
+  color: #1a1a1f;
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  font-variant-numeric: tabular-nums;
 }
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(59,110,232,0.3); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(59,110,232,0.5); }
+::-webkit-scrollbar-thumb { background: rgba(19,122,140,0.25); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(19,122,140,0.5); }
 
 h1, h2, h3, .font-display {
   font-family: 'Manrope', system-ui, sans-serif;
+  letter-spacing: -0.02em;
 }
 
 :root {
-  --background:          220 28% 8%;
-  --foreground:          230 15% 94%;
-  --card:                222 30% 11%;
-  --card-foreground:     230 15% 94%;
-  --popover:             222 33% 10%;
-  --popover-foreground:  230 15% 94%;
-  --primary:             225 78% 57%;
+  /* ── Odontix Design System v2.0 — Light Clínico ── */
+  --background:          210 17% 96%;
+  --foreground:          222 20% 10%;
+  --card:                0 0% 100%;
+  --card-foreground:     222 20% 10%;
+  --popover:             0 0% 100%;
+  --popover-foreground:  222 20% 10%;
+  --primary:             189 76% 35%;
   --primary-foreground:  0 0% 100%;
-  --secondary:           222 28% 16%;
-  --secondary-foreground: 230 15% 80%;
-  --muted:               222 28% 14%;
-  --muted-foreground:    220 12% 60%;
-  --accent:              225 78% 57%;
+  --secondary:           210 16% 93%;
+  --secondary-foreground: 222 20% 25%;
+  --muted:               210 16% 93%;
+  --muted-foreground:    220 10% 50%;
+  --accent:              189 76% 35%;
   --accent-foreground:   0 0% 100%;
   --destructive:         0 72% 51%;
   --destructive-foreground: 0 0% 100%;
-  --border:              225 40% 18%;
-  --input:               222 28% 16%;
-  --ring:                225 78% 57%;
+  --border:              220 13% 88%;
+  --input:               220 13% 91%;
+  --ring:                189 76% 35%;
   --radius: 0.875rem;
 }

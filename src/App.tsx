@@ -34,7 +34,7 @@ export default function App() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-gray-950 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#f4f6f8' }}>
         <div className="text-center">
           <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
           <p className="text-gray-400 text-sm">Cargando...</p>
@@ -70,7 +70,7 @@ export default function App() {
     };
 
     return (
-      <div className="flex h-screen bg-gray-100 overflow-hidden">
+      <div className="flex h-screen overflow-hidden" style={{ background: '#f4f6f8' }}>
         <AdminSidebar
           currentPage={adminPage}
           onNavigate={setAdminPage}
@@ -88,7 +88,7 @@ export default function App() {
   // PLAN LOADING
   if ((role === 'clinic' || viewingAs) && planLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center" style={{ background: '#f4f6f8' }}>
         <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -127,7 +127,7 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen bg-gray-50 overflow-hidden font-sans">
+    <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#f4f6f8' }}>
       {sidebarOpen && (
         <div className="fixed inset-0 bg-black/40 z-20 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
@@ -153,13 +153,13 @@ export default function App() {
       />
 
       <div className={`flex-1 flex flex-col min-w-0 overflow-hidden ${viewingAs ? 'pt-8' : ''}`}>
-        <div className="lg:hidden flex items-center gap-3 px-4 py-3 bg-white border-b border-gray-200">
-          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-md hover:bg-gray-100 text-gray-600">
+        <div className="lg:hidden flex items-center gap-3 px-4 py-3" style={{ background: '#f4f6f8', borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
+          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-md" style={{ color: 'rgba(240,240,245,0.6)' }}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <span className="font-semibold text-gray-900">Odontix</span>
+          <span className="font-semibold text-white">Odontix</span>
         </div>
         <main className="flex-1 overflow-y-auto">{renderPage()}</main>
       </div>

@@ -2,32 +2,20 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { Plan } from '@/hooks/usePlan';
 
-interface BotStats {
-  totalCitas: number;
-  citasEsteMes: number;
-  citasHoy: number;
-  confirmacionesEnviadas: number;
-}
+interface BotStats { totalCitas: number; citasEsteMes: number; citasHoy: number; confirmacionesEnviadas: number; }
+interface BasicPlanPageProps { clinicName?: string; plan: Plan; clienteId?: string | null; onSignOut: () => void; viewingAs?: { id: string; nombre: string } | null; }
 
-interface BasicPlanPageProps {
-  clinicName?: string;
-  plan: Plan;
-  clienteId?: string | null;
-  onSignOut: () => void;
-  viewingAs?: { id: string; nombre: string } | null;
-}
+const TEXT_MUTED = '#5c5c6b';
+const TEXT_DIM = '#9a9aaa';
+const CARD = { background: '#ffffff', border: '1px solid rgba(0,0,0,0.07)', borderRadius: '1rem' };
 
 export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, viewingAs }: BasicPlanPageProps) {
   const isBasic = plan === 'basic';
   const [stats, setStats] = useState<BotStats | null>(null);
   const [loadingStats, setLoadingStats] = useState(false);
-
   const effectiveClienteId = viewingAs?.id ?? clienteId;
 
-  useEffect(() => {
-    if (!effectiveClienteId) return;
-    loadStats();
-  }, [effectiveClienteId]);
+  useEffect(() => { if (effectiveClienteId) loadStats(); }, [effectiveClienteId]);
 
   async function loadStats() {
     setLoadingStats(true);
@@ -35,127 +23,107 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
       const now = new Date();
       const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
       const today = now.toISOString().split('T')[0];
-
       const [totalRes, mesRes, hoyRes, confirmRes] = await Promise.all([
         supabase.from('citas').select('id', { count: 'exact', head: true }).eq('cliente_id', effectiveClienteId),
         supabase.from('citas').select('id', { count: 'exact', head: true }).eq('cliente_id', effectiveClienteId).gte('fecha', startOfMonth),
         supabase.from('citas').select('id', { count: 'exact', head: true }).eq('cliente_id', effectiveClienteId).eq('fecha', today),
         supabase.from('citas').select('id', { count: 'exact', head: true }).eq('cliente_id', effectiveClienteId).eq('confirmacion_enviada', true),
       ]);
-
-      setStats({
-        totalCitas: totalRes.count ?? 0,
-        citasEsteMes: mesRes.count ?? 0,
-        citasHoy: hoyRes.count ?? 0,
-        confirmacionesEnviadas: confirmRes.count ?? 0,
-      });
-    } catch {
-      setStats({ totalCitas: 0, citasEsteMes: 0, citasHoy: 0, confirmacionesEnviadas: 0 });
-    }
+      setStats({ totalCitas: totalRes.count ?? 0, citasEsteMes: mesRes.count ?? 0, citasHoy: hoyRes.count ?? 0, confirmacionesEnviadas: confirmRes.count ?? 0 });
+    } catch { setStats({ totalCitas: 0, citasEsteMes: 0, citasHoy: 0, confirmacionesEnviadas: 0 }); }
     setLoadingStats(false);
   }
 
+  const statItems = stats ? [
+    { value: stats.totalCitas, label: 'Citas registradas', neon: '#1a9db5', glow: 'rgba(26,157,181,0.3)' },
+    { value: stats.citasEsteMes, label: 'Citas este mes', neon: '#00E878', glow: 'rgba(0,232,120,0.3)' },
+    { value: stats.citasHoy, label: 'Citas hoy', neon: '#FFBB00', glow: 'rgba(255,187,0,0.3)' },
+    { value: stats.confirmacionesEnviadas, label: 'Confirmaciones enviadas', neon: '#3dc0d8', glow: 'rgba(61,192,216,0.3)' },
+  ] : null;
+
   return (
-    <div className={`min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6 ${viewingAs ? 'pt-16' : ''}`}>
+    <div className={`min-h-screen flex flex-col items-center justify-center p-6 ${viewingAs ? 'pt-16' : ''}`} style={{ background: '#f4f6f8' }}>
       {viewingAs && (
         <div className="fixed top-0 left-0 right-0 z-50 bg-orange-500 text-white text-xs font-medium py-1.5 px-4 flex items-center justify-between">
-          <span>Vista admin: <strong>{viewingAs.nombre}</strong><span className="ml-2 opacity-80">- Plan basic</span></span>
+          <span>Vista admin: <strong>{viewingAs.nombre}</strong><span className="ml-2 opacity-80">– Plan basic</span></span>
           <button onClick={onSignOut} className="underline hover:no-underline">Volver al admin</button>
         </div>
       )}
 
       <div className="w-full max-w-lg">
-        {/* Header */}
+        {/* Logo */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 mb-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-xl flex items-center justify-center">
+          <div className="inline-flex items-center gap-3 mb-3">
+            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #137a8c, #0f5e70)', boxShadow: '0 0 24px rgba(59,110,232,0.45)' }}>
               <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
               </svg>
             </div>
-            <span className="text-2xl font-bold text-gray-900">Odontix</span>
+            <span className="text-2xl text-white tracking-tight" style={{ fontFamily: 'Manrope, system-ui, sans-serif', fontWeight: 800 }}>Odontix</span>
           </div>
-          {clinicName && (
-            <p className="text-gray-500 text-sm">Bienvenido, <span className="font-medium text-gray-700">{clinicName}</span></p>
-          )}
+          {clinicName && <p className="text-sm" style={{ color: TEXT_MUTED }}>Bienvenido, <span className="text-white font-medium">{clinicName}</span></p>}
         </div>
 
-        {/* Bot status */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-6 mb-4 shadow-sm">
+        {/* Bot status card */}
+        <div style={{ ...CARD, padding: '1.5rem', marginBottom: '1rem' }}>
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full bg-green-500 animate-pulse" />
-              <span className="text-green-700 font-semibold text-sm">Bot WhatsApp activo</span>
+              <div className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ background: '#00E878', boxShadow: '0 0 8px #00E878' }} />
+              <span className="font-semibold text-sm" style={{ color: '#00E878' }}>Bot WhatsApp activo</span>
             </div>
-            <span className="bg-gray-100 text-gray-600 text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wide">
-              Plan Basic
-            </span>
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wide" style={{ background: '#f0f2f5', color: TEXT_MUTED }}>Plan Basic</span>
           </div>
 
-          <p className="text-gray-500 text-sm leading-relaxed mb-5">
+          <p className="text-sm leading-relaxed mb-5" style={{ color: TEXT_MUTED }}>
             Tu asistente virtual gestiona citas automaticamente por WhatsApp, sin que tengas que hacer nada.
           </p>
 
-          {/* Stats grid */}
           {loadingStats ? (
             <div className="grid grid-cols-2 gap-3">
               {[0,1,2,3].map(i => (
-                <div key={i} className="bg-gray-50 rounded-xl p-4 animate-pulse">
-                  <div className="h-6 bg-gray-200 rounded w-12 mb-1" />
-                  <div className="h-3 bg-gray-200 rounded w-24" />
+                <div key={i} className="rounded-xl p-4 animate-pulse" style={{ background: '#ffffff' }}>
+                  <div className="h-6 rounded w-12 mb-1" style={{ background: '#eef0f3' }} />
+                  <div className="h-3 rounded w-24" style={{ background: '#f4f6f8' }} />
                 </div>
               ))}
             </div>
-          ) : stats ? (
+          ) : statItems ? (
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-blue-50 rounded-xl p-4">
-                <p className="text-2xl font-bold text-blue-700">{stats.totalCitas.toLocaleString()}</p>
-                <p className="text-xs text-gray-500 mt-0.5">Citas registradas</p>
-              </div>
-              <div className="bg-green-50 rounded-xl p-4">
-                <p className="text-2xl font-bold text-green-700">{stats.citasEsteMes}</p>
-                <p className="text-xs text-gray-500 mt-0.5">Citas este mes</p>
-              </div>
-              <div className="bg-orange-50 rounded-xl p-4">
-                <p className="text-2xl font-bold text-orange-600">{stats.citasHoy}</p>
-                <p className="text-xs text-gray-500 mt-0.5">Citas hoy</p>
-              </div>
-              <div className="bg-purple-50 rounded-xl p-4">
-                <p className="text-2xl font-bold text-purple-600">{stats.confirmacionesEnviadas}</p>
-                <p className="text-xs text-gray-500 mt-0.5">Confirmaciones enviadas</p>
-              </div>
+              {statItems.map((s, i) => (
+                <div key={i} className="rounded-xl p-4" style={{ background: '#ffffff', border: '1px solid rgba(255,255,255,0.06)' }}>
+                  <p className="text-2xl font-bold" style={{ color: s.neon, textShadow: `0 0 16px ${s.glow}` }}>{s.value.toLocaleString()}</p>
+                  <p className="text-xs mt-0.5" style={{ color: TEXT_DIM }}>{s.label}</p>
+                </div>
+              ))}
             </div>
           ) : (
             <div className="grid grid-cols-2 gap-3">
-              <div className="bg-blue-50 rounded-xl p-4">
-                <p className="text-2xl font-bold text-blue-700">--</p>
-                <p className="text-xs text-gray-500 mt-0.5">Citas registradas</p>
-              </div>
-              <div className="bg-green-50 rounded-xl p-4">
-                <p className="text-2xl font-bold text-green-700">--</p>
-                <p className="text-xs text-gray-500 mt-0.5">Citas este mes</p>
-              </div>
+              {['--','--'].map((v, i) => (
+                <div key={i} className="rounded-xl p-4" style={{ background: '#ffffff' }}>
+                  <p className="text-2xl font-bold" style={{ color: '#1a9db5' }}>{v}</p>
+                </div>
+              ))}
             </div>
           )}
         </div>
 
-        {/* What the bot does */}
-        <div className="bg-white rounded-2xl border border-gray-200 p-5 mb-4 shadow-sm">
-          <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Lo que hace el bot por ti</p>
+        {/* What bot does */}
+        <div style={{ ...CARD, padding: '1.25rem', marginBottom: '1rem' }}>
+          <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'rgba(79,158,255,0.6)' }}>Lo que hace el bot por ti</p>
           <div className="space-y-2.5">
             {[
               { icon: "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z", label: "Responde pacientes 24/7 por WhatsApp" },
               { icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z", label: "Agenda citas en Google Calendar" },
-              { icon: "M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9", label: "Envia recordatorios automaticos" },
-              { icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z", label: "Confirma y cancela sin intervencion" },
+              { icon: "M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9", label: "Envía recordatorios automáticos" },
+              { icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z", label: "Confirma y cancela sin intervención" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="w-7 h-7 bg-blue-50 rounded-lg flex items-center justify-center flex-shrink-0">
-                  <svg className="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(79,158,255,0.1)' }}>
+                  <svg className="w-3.5 h-3.5" style={{ color: '#1a9db5' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
                   </svg>
                 </div>
-                <p className="text-sm text-gray-600">{item.label}</p>
+                <p className="text-sm" style={{ color: TEXT_MUTED }}>{item.label}</p>
               </div>
             ))}
           </div>
@@ -163,23 +131,24 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
 
         {/* Upsell */}
         {isBasic && (
-          <div className="bg-gradient-to-br from-blue-600 to-blue-700 rounded-2xl p-5 text-white shadow-sm">
-            <p className="font-semibold text-sm mb-1">Ver el dashboard completo</p>
-            <p className="text-blue-100 text-xs leading-relaxed mb-4">
-              Agenda visual, historial de pacientes, estadisticas de rendimiento y seguimiento de ausencias.
+          <div className="rounded-2xl p-5 text-white" style={{ background: 'linear-gradient(135deg, rgba(19,122,140,0.25) 0%, rgba(42,85,200,0.4) 100%)', border: '1px solid rgba(26,157,181,0.3)', boxShadow: '0 0 30px rgba(0,0,0,0.06)' }}>
+            <p className="font-semibold text-sm mb-1" style={{ fontFamily: 'Manrope, system-ui, sans-serif' }}>Ver el dashboard completo</p>
+            <p className="text-xs leading-relaxed mb-4" style={{ color: '#5c5c6b' }}>
+              Agenda visual, historial de pacientes, estadísticas de rendimiento y seguimiento de ausencias.
             </p>
-            <a
-              href="mailto:wernher.martinez@gmail.com?subject=Actualizar a Professional"
-              className="block text-center bg-white text-blue-700 font-semibold text-sm rounded-xl py-2.5 hover:bg-blue-50 transition-colors"
-            >
-              Actualizar a Professional - 149/mes
+            <a href="mailto:wernher.martinez@gmail.com?subject=Actualizar a Professional"
+              className="block text-center font-semibold text-sm rounded-xl py-2.5 transition-all"
+              style={{ background: '#1a9db5', color: '#f4f6f8', boxShadow: '0 4px 16px rgba(19,122,140,0.2)' }}>
+              Actualizar a Professional — 189€/mes
             </a>
           </div>
         )}
 
         <div className="text-center mt-5">
-          <button onClick={onSignOut} className="text-gray-400 hover:text-gray-600 text-sm transition-colors">
-            Cerrar sesion
+          <button onClick={onSignOut} className="text-sm transition-colors" style={{ color: TEXT_DIM }}
+            onMouseEnter={e => (e.currentTarget.style.color = TEXT_MUTED)}
+            onMouseLeave={e => (e.currentTarget.style.color = TEXT_DIM)}>
+            Cerrar sesión
           </button>
         </div>
       </div>

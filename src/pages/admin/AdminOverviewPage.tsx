@@ -2,15 +2,15 @@ import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 
 interface ResumenRow {
-  cliente: string;
-  automatizacion: string;
-  estado: string;
-  progreso_porcentaje: number;
-  precio_mensual: number;
-  coste_mensual: number;
-  margen_mensual: number;
-  pago_implementacion: number;
+  cliente: string; automatizacion: string; estado: string;
+  progreso_porcentaje: number; precio_mensual: number;
+  coste_mensual: number; margen_mensual: number; pago_implementacion: number;
 }
+
+const CARD = { background: '#ffffff', border: '1px solid rgba(0,0,0,0.07)', borderRadius: '0.875rem' };
+const TEXT_MUTED = '#5c5c6b';
+const TEXT_DIM = '#9a9aaa';
+const ROW_HOVER = '#f9fafb';
 
 export default function AdminOverviewPage() {
   const [data, setData] = useState<ResumenRow[]>([]);
@@ -26,66 +26,67 @@ export default function AdminOverviewPage() {
   const totalIngresos = data.reduce((s, r) => s + (r.precio_mensual || 0), 0);
   const totalCostes = data.reduce((s, r) => s + (r.coste_mensual || 0), 0);
   const totalMargen = data.reduce((s, r) => s + (r.margen_mensual || 0), 0);
-  const totalClinicas = data.length;
+
+  const kpis = [
+    { label: 'Clínicas activas', value: data.length, color: '#1a9db5', glow: 'rgba(26,157,181,0.3)' },
+    { label: 'Ingresos / mes',   value: `${totalIngresos}€`, color: '#00E878', glow: 'rgba(0,232,120,0.3)' },
+    { label: 'Costes / mes',     value: `${totalCostes}€`,   color: '#FF3C5A', glow: 'rgba(255,60,90,0.3)' },
+    { label: 'Margen / mes',     value: `${totalMargen}€`,   color: '#3dc0d8', glow: 'rgba(61,192,216,0.3)' },
+  ];
 
   return (
     <div className="p-8 max-w-5xl mx-auto">
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-gray-900">Visión global</h1>
-        <p className="text-gray-500 text-sm mt-1">Métricas de todas las clínicas activas</p>
+        <h1 className="text-2xl font-bold" style={{ color: '#1a1a1f', fontFamily: 'Manrope, system-ui, sans-serif' }}>Visión global</h1>
+        <p className="text-sm mt-1" style={{ color: TEXT_MUTED }}>Métricas de todas las clínicas activas</p>
       </div>
 
-      {/* KPIs */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        {[
-          { label: 'Clínicas activas', value: totalClinicas, color: 'bg-blue-50 text-blue-600' },
-          { label: 'Ingresos / mes', value: `${totalIngresos}€`, color: 'bg-green-50 text-green-600' },
-          { label: 'Costes / mes', value: `${totalCostes}€`, color: 'bg-red-50 text-red-600' },
-          { label: 'Margen / mes', value: `${totalMargen}€`, color: 'bg-purple-50 text-purple-600' },
-        ].map((k) => (
-          <div key={k.label} className="bg-white rounded-xl border border-gray-200 p-5">
-            <p className="text-gray-500 text-xs font-medium mb-1">{k.label}</p>
-            <p className={`text-2xl font-bold ${k.color.split(' ')[1]}`}>{k.value}</p>
+        {kpis.map((k) => (
+          <div key={k.label} style={{ ...CARD, padding: '1.25rem' }}>
+            <p className="text-xs font-medium mb-1" style={{ color: TEXT_MUTED }}>{k.label}</p>
+            <p className="text-2xl font-bold" style={{ color: k.color, textShadow: `0 0 20px ${k.glow}` }}>{k.value}</p>
           </div>
         ))}
       </div>
 
-      {/* Table */}
       {loading ? (
-        <div className="text-gray-400 text-sm">Cargando...</div>
+        <div className="text-sm" style={{ color: TEXT_MUTED }}>Cargando...</div>
       ) : (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div style={{ ...CARD, overflow: 'hidden' }}>
           <table className="w-full text-sm">
-            <thead className="bg-gray-50 border-b border-gray-200">
-              <tr>
-                <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Clínica</th>
-                <th className="px-5 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wide">Estado</th>
-                <th className="px-5 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wide">Precio</th>
-                <th className="px-5 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wide">Margen</th>
+            <thead>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)', background: '#f9fafb' }}>
+                {['Clínica','Estado','Precio','Margen'].map((h, i) => (
+                  <th key={h} className={`px-5 py-3 text-xs font-semibold uppercase tracking-wide ${i > 1 ? 'text-right' : 'text-left'}`} style={{ color: TEXT_DIM }}>{h}</th>
+                ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody>
               {data.map((row, i) => (
-                <tr key={i} className="hover:bg-gray-50 transition-colors">
+                <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = ROW_HOVER)}
+                  onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
                   <td className="px-5 py-3.5">
-                    <p className="font-medium text-gray-900">{row.cliente}</p>
-                    <p className="text-gray-400 text-xs">{row.automatizacion}</p>
+                    <p className="font-medium" style={{ color: "#1a1a1f" }}>{row.cliente}</p>
+                    <p className="text-xs" style={{ color: TEXT_MUTED }}>{row.automatizacion}</p>
                   </td>
                   <td className="px-5 py-3.5">
-                    <span className={`inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full ${
-                      row.estado === 'activo' ? 'bg-green-100 text-green-700' : 'bg-yellow-100 text-yellow-700'
-                    }`}>
-                      <span className={`w-1.5 h-1.5 rounded-full ${row.estado === 'activo' ? 'bg-green-500' : 'bg-yellow-500'}`} />
+                    <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full"
+                      style={row.estado === 'activo'
+                        ? { background: 'rgba(0,232,120,0.12)', color: '#00E878' }
+                        : { background: 'rgba(255,187,0,0.12)', color: '#FFBB00' }}>
+                      <span className="w-1.5 h-1.5 rounded-full" style={{ background: row.estado === 'activo' ? '#00E878' : '#FFBB00' }} />
                       {row.estado}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-right font-medium text-gray-900">{row.precio_mensual}€</td>
-                  <td className="px-5 py-3.5 text-right font-medium text-green-600">{row.margen_mensual}€</td>
+                  <td className="px-5 py-3.5 text-right font-medium text-white">{row.precio_mensual}€</td>
+                  <td className="px-5 py-3.5 text-right font-medium" style={{ color: '#00E878' }}>{row.margen_mensual}€</td>
                 </tr>
               ))}
               {data.length === 0 && (
                 <tr>
-                  <td colSpan={4} className="px-5 py-8 text-center text-gray-400">Sin clínicas registradas</td>
+                  <td colSpan={4} className="px-5 py-10 text-center text-sm" style={{ color: TEXT_DIM }}>Sin clínicas registradas</td>
                 </tr>
               )}
             </tbody>

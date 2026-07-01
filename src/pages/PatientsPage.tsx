@@ -1,227 +1,181 @@
 import { useState } from "react";
-import { patients, appointments } from "@/data/mockData";
-import type { Patient } from "@/data/mockData";
+import { patients } from "@/data/mockData";
+import type { Plan } from "@/hooks/usePlan";
 
-const insuranceColors: Record<string, string> = {
-  "OSDE 210": "bg-blue-100 text-blue-700",
-  "Swiss Medical": "bg-indigo-100 text-indigo-700",
-  "Galeno": "bg-violet-100 text-violet-700",
-  "Medifé": "bg-sky-100 text-sky-700",
-  "IOMA": "bg-cyan-100 text-cyan-700",
-  "Sancor Salud": "bg-teal-100 text-teal-700",
-  "Particular": "bg-gray-100 text-gray-600",
-  "PAMI": "bg-amber-100 text-amber-700",
-  "Federada Salud": "bg-orange-100 text-orange-700",
-};
+const CARD = { background: "#ffffff", border: "1px solid rgba(0,0,0,0.07)", borderRadius: "0.875rem" } as const;
+const MUTED = "#5c5c6b";
+const DIM = "#9a9aaa";
+const BORDER = "rgba(0,0,0,0.07)";
+const INPUT_STYLE = {
+  background: "#f4f6f8",
+  border: "1px solid rgba(0,0,0,0.08)",
+  borderRadius: "0.5rem",
+  color: "#1a1a1f",
+  padding: "0.5rem 0.75rem",
+  fontSize: "0.875rem",
+  outline: "none",
+  width: "100%",
+} as const;
 
-function PatientModal({ patient, onClose }: { patient: Patient; onClose: () => void }) {
-  const patientAppts = appointments.filter((a) => a.patientId === patient.id).sort((a, b) => b.date.localeCompare(a.date));
-  const attended = patientAppts.filter(a => a.status === "attended").length;
-  const absent = patientAppts.filter(a => a.status === "absent").length;
+interface PatientsPageProps { plan?: Plan | null }
 
-  return (
-    <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4" onClick={onClose}>
-      <div className="bg-white rounded-2xl shadow-xl w-full max-w-2xl max-h-[85vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
-        <div className="p-5 border-b border-gray-100 flex items-start justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 font-bold text-lg">
-              {patient.name[0]}{patient.lastName[0]}
-            </div>
-            <div>
-              <h2 className="text-gray-900 font-bold text-lg">{patient.fullName}</h2>
-              <p className="text-gray-500 text-sm">{patient.phone} · {patient.email}</p>
-            </div>
-          </div>
-          <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-lg text-gray-400">
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
-        <div className="p-5 grid grid-cols-2 gap-4 text-sm">
-          <div><p className="text-gray-400 text-xs">DNI</p><p className="font-medium text-gray-900">{patient.dni}</p></div>
-          <div><p className="text-gray-400 text-xs">Edad</p><p className="font-medium text-gray-900">{patient.age} años</p></div>
-          <div><p className="text-gray-400 text-xs">Fecha de nacimiento</p><p className="font-medium text-gray-900">{patient.birthDate}</p></div>
-          <div><p className="text-gray-400 text-xs">Género</p><p className="font-medium text-gray-900">{patient.gender === "M" ? "Masculino" : "Femenino"}</p></div>
-          <div><p className="text-gray-400 text-xs">Cobertura</p><p className="font-medium text-gray-900">{patient.insurance}</p></div>
-          <div><p className="text-gray-400 text-xs">Dirección</p><p className="font-medium text-gray-900">{patient.address}</p></div>
-          <div><p className="text-gray-400 text-xs">Registrado</p><p className="font-medium text-gray-900">{patient.registeredAt}</p></div>
-          <div><p className="text-gray-400 text-xs">Última visita</p><p className="font-medium text-gray-900">{patient.lastVisit ?? "—"}</p></div>
-        </div>
-
-        {patient.notes && (
-          <div className="px-5 pb-3">
-            <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 text-xs text-amber-800">
-              <strong>Nota clínica:</strong> {patient.notes}
-            </div>
-          </div>
-        )}
-
-        <div className="px-5 pb-3 flex gap-2 flex-wrap">
-          {patient.tags.map((tag) => (
-            <span key={tag} className="text-xs bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">{tag}</span>
-          ))}
-        </div>
-
-        {/* Stats */}
-        <div className="px-5 pb-3 grid grid-cols-3 gap-3">
-          {[
-            { label: "Total visitas", value: patient.totalVisits },
-            { label: "Atendidas", value: attended },
-            { label: "Ausencias", value: absent },
-          ].map((s) => (
-            <div key={s.label} className="bg-gray-50 rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold text-gray-900">{s.value}</p>
-              <p className="text-xs text-gray-500">{s.label}</p>
-            </div>
-          ))}
-        </div>
-
-        {/* History */}
-        <div className="px-5 pb-5">
-          <h3 className="text-sm font-semibold text-gray-900 mb-3">Historial de citas</h3>
-          <div className="space-y-1.5 max-h-48 overflow-y-auto">
-            {patientAppts.slice(0, 15).map((a) => (
-              <div key={a.id} className="flex items-center gap-3 text-xs py-1.5 border-b border-gray-100 last:border-0">
-                <span className="text-gray-400 w-24 flex-shrink-0">{a.date} {a.time}</span>
-                <span className="text-gray-700 flex-1">{a.treatment}</span>
-                <span className={`px-1.5 py-0.5 rounded-full text-[10px] font-medium ${
-                  a.status === "attended" ? "bg-green-100 text-green-700" :
-                  a.status === "absent" ? "bg-red-100 text-red-700" :
-                  "bg-blue-100 text-blue-700"
-                }`}>
-                  {a.status === "attended" ? "Atendido" : a.status === "absent" ? "Ausente" : "Agendado"}
-                </span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default function PatientsPage() {
+export default function PatientsPage({ plan }: PatientsPageProps = {}) {
   const [search, setSearch] = useState("");
-  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
-  const [sortKey, setSortKey] = useState<"name" | "lastVisit" | "totalVisits">("name");
-  const [insuranceFilter, setInsuranceFilter] = useState("all");
+  const [selected, setSelected] = useState<(typeof patients)[0] | null>(null);
 
-  const insurances = ["all", ...Array.from(new Set(patients.map((p) => p.insurance)))];
+  const filtered = patients.filter((p) =>
+    p.name.toLowerCase().includes(search.toLowerCase()) ||
+    p.phone.includes(search) ||
+    p.email?.toLowerCase().includes(search.toLowerCase())
+  );
 
-  const filtered = patients
-    .filter((p) => {
-      const q = search.toLowerCase();
-      const matchSearch = p.fullName.toLowerCase().includes(q) || p.phone.includes(q) || p.dni.includes(q) || p.email.toLowerCase().includes(q);
-      const matchInsurance = insuranceFilter === "all" || p.insurance === insuranceFilter;
-      return matchSearch && matchInsurance;
-    })
-    .sort((a, b) => {
-      if (sortKey === "name") return a.fullName.localeCompare(b.fullName);
-      if (sortKey === "lastVisit") return (b.lastVisit ?? "").localeCompare(a.lastVisit ?? "");
-      return b.totalVisits - a.totalVisits;
-    });
+  const initials = (name: string) => name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+
+  const avatarColors = ["#1a9db5", "#00E878", "#3dc0d8", "#FFBB00", "#FF3C5A"];
+  const avatarColor = (name: string) => avatarColors[name.charCodeAt(0) % avatarColors.length];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-5">
-      {selectedPatient && <PatientModal patient={selectedPatient} onClose={() => setSelectedPatient(null)} />}
+    <div style={{ padding: "1.5rem", maxWidth: "80rem", margin: "0 auto" }} className="space-y-5">
+      {/* Patient detail modal */}
+      {selected && (
+        <div
+          style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}
+          onClick={(e) => { if (e.target === e.currentTarget) setSelected(null); }}
+        >
+          <div style={{ background: "#ffffff", border: "1px solid rgba(79,158,255,0.25)", borderRadius: "1rem", maxWidth: "32rem", width: "100%", padding: "1.5rem", boxShadow: "0 0 40px rgba(79,158,255,0.1)" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
+              <h2 style={{ color: "#1a1a1f", fontWeight: 700, fontSize: "1.1rem" }}>Ficha del Paciente</h2>
+              <button
+                onClick={() => setSelected(null)}
+                style={{ background: "#f4f6f8", border: `1px solid ${BORDER}`, borderRadius: "0.5rem", color: MUTED, width: "2rem", height: "2rem", cursor: "pointer", fontSize: "1.1rem", display: "flex", alignItems: "center", justifyContent: "center" }}
+              >×</button>
+            </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-bold text-gray-900">Pacientes</h1>
-          <p className="text-gray-500 text-sm">{patients.length} pacientes registrados</p>
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" }}>
+              <div style={{ width: "3.5rem", height: "3.5rem", borderRadius: "50%", background: `rgba(${avatarColor(selected.name) === "#1a9db5" ? "79,158,255" : avatarColor(selected.name) === "#00E878" ? "0,232,120" : avatarColor(selected.name) === "#3dc0d8" ? "167,139,250" : avatarColor(selected.name) === "#FFBB00" ? "255,187,0" : "255,60,90"},0.2)`, border: `2px solid ${avatarColor(selected.name)}`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, color: avatarColor(selected.name), fontSize: "1rem" }}>
+                {initials(selected.name)}
+              </div>
+              <div>
+                <p style={{ color: "#1a1a1f", fontWeight: 700, fontSize: "1.1rem" }}>{selected.name}</p>
+                <p style={{ color: MUTED, fontSize: "0.875rem" }}>{selected.phone}</p>
+              </div>
+            </div>
+
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0.75rem", marginBottom: "1.25rem" }}>
+              {[
+                { label: "Email", value: selected.email || "—" },
+                { label: "Fecha de nacimiento", value: selected.birthDate || "—" },
+                { label: "Última visita", value: selected.lastVisit || "—" },
+                { label: "Próxima cita", value: selected.nextAppointment || "—" },
+              ].map((f) => (
+                <div key={f.label} style={{ background: "#ffffff", borderRadius: "0.5rem", padding: "0.75rem" }}>
+                  <p style={{ color: DIM, fontSize: "0.7rem", marginBottom: "0.2rem", textTransform: "uppercase", letterSpacing: "0.04em" }}>{f.label}</p>
+                  <p style={{ color: "#1a1a1f", fontSize: "0.875rem", fontWeight: 500 }}>{f.value}</p>
+                </div>
+              ))}
+            </div>
+
+            {selected.notes && (
+              <div style={{ background: "rgba(79,158,255,0.06)", border: "1px solid rgba(79,158,255,0.15)", borderRadius: "0.5rem", padding: "0.875rem", marginBottom: "1.25rem" }}>
+                <p style={{ color: "#1a9db5", fontSize: "0.72rem", fontWeight: 600, textTransform: "uppercase", marginBottom: "0.35rem" }}>Notas</p>
+                <p style={{ color: MUTED, fontSize: "0.875rem" }}>{selected.notes}</p>
+              </div>
+            )}
+
+            <button
+              onClick={() => setSelected(null)}
+              style={{ width: "100%", background: "#f4f6f8", border: `1px solid ${BORDER}`, borderRadius: "0.625rem", color: MUTED, padding: "0.6rem", cursor: "pointer", fontSize: "0.875rem", fontWeight: 600 }}
+            >
+              Cerrar
+            </button>
+          </div>
         </div>
-        <button className="bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4"/></svg>
-          Nuevo paciente
-        </button>
+      )}
+
+      {/* Header */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
+        <div>
+          <h1 style={{ fontSize: "1.25rem", fontWeight: 700, color: "#1a1a1f", marginBottom: "0.2rem" }}>Pacientes</h1>
+          <p style={{ color: MUTED, fontSize: "0.875rem" }}>{patients.length} pacientes registrados</p>
+        </div>
       </div>
 
-      {/* Filters */}
-      <div className="flex flex-wrap gap-3">
-        <div className="flex-1 min-w-48 relative">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
-          <input
-            type="text"
-            placeholder="Buscar por nombre, teléfono, DNI o email..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white"
-          />
-        </div>
-        <select value={insuranceFilter} onChange={(e) => setInsuranceFilter(e.target.value)} className="border border-gray-200 rounded-lg text-sm px-3 py-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="all">Todas las coberturas</option>
-          {insurances.slice(1).map((ins) => <option key={ins} value={ins}>{ins}</option>)}
-        </select>
-        <select value={sortKey} onChange={(e) => setSortKey(e.target.value as typeof sortKey)} className="border border-gray-200 rounded-lg text-sm px-3 py-2 text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
-          <option value="name">Ordenar: Nombre</option>
-          <option value="lastVisit">Ordenar: Última visita</option>
-          <option value="totalVisits">Ordenar: Más visitas</option>
-        </select>
+      {/* Search */}
+      <div style={{ ...CARD, padding: "1rem" }}>
+        <input
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Buscar por nombre, teléfono o email…"
+          style={{ ...INPUT_STYLE, maxWidth: "28rem" }}
+        />
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
+      <div style={{ ...CARD, overflow: "hidden" }}>
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "0.875rem" }}>
             <thead>
-              <tr className="border-b border-gray-100 bg-gray-50">
-                <th className="text-left text-xs font-medium text-gray-500 px-4 py-3">Paciente</th>
-                <th className="text-left text-xs font-medium text-gray-500 px-4 py-3">Contacto</th>
-                <th className="text-left text-xs font-medium text-gray-500 px-4 py-3">Cobertura</th>
-                <th className="text-left text-xs font-medium text-gray-500 px-4 py-3">Edad</th>
-                <th className="text-left text-xs font-medium text-gray-500 px-4 py-3">Visitas</th>
-                <th className="text-left text-xs font-medium text-gray-500 px-4 py-3">Última visita</th>
-                <th className="text-left text-xs font-medium text-gray-500 px-4 py-3">Tags</th>
-                <th className="text-left text-xs font-medium text-gray-500 px-4 py-3"></th>
+              <tr style={{ borderBottom: `1px solid ${BORDER}` }}>
+                {["Paciente", "Teléfono", "Email", "Última visita", "Próxima cita", ""].map((h) => (
+                  <th key={h} style={{ textAlign: "left", padding: "0.875rem 1rem", color: DIM, fontWeight: 600, fontSize: "0.75rem", textTransform: "uppercase", letterSpacing: "0.05em", whiteSpace: "nowrap" }}>
+                    {h}
+                  </th>
+                ))}
               </tr>
             </thead>
             <tbody>
-              {filtered.map((p) => (
-                <tr key={p.id} className="border-b border-gray-100 hover:bg-gray-50 transition-colors">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-700 text-xs font-bold flex-shrink-0">
-                        {p.name[0]}{p.lastName[0]}
-                      </div>
-                      <div>
-                        <p className="font-medium text-gray-900">{p.fullName}</p>
-                        <p className="text-gray-400 text-xs">DNI {p.dni}</p>
-                      </div>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <p className="text-gray-700 text-xs">{p.phone}</p>
-                    <p className="text-gray-400 text-xs truncate max-w-40">{p.email}</p>
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${insuranceColors[p.insurance] ?? "bg-gray-100 text-gray-600"}`}>
-                      {p.insurance}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-gray-600 text-xs">{p.age} años</td>
-                  <td className="px-4 py-3 text-gray-600 text-xs font-medium">{p.totalVisits}</td>
-                  <td className="px-4 py-3 text-gray-500 text-xs">{p.lastVisit ?? "—"}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-1 flex-wrap">
-                      {p.tags.slice(0, 2).map((tag) => (
-                        <span key={tag} className="text-[10px] bg-gray-100 text-gray-500 px-1.5 py-0.5 rounded">{tag}</span>
-                      ))}
-                    </div>
-                  </td>
-                  <td className="px-4 py-3">
-                    <button
-                      onClick={() => setSelectedPatient(p)}
-                      className="text-blue-600 hover:text-blue-800 text-xs font-medium"
-                    >
-                      Ver
-                    </button>
+              {filtered.length === 0 ? (
+                <tr>
+                  <td colSpan={6} style={{ textAlign: "center", padding: "3rem", color: MUTED }}>
+                    No se encontraron pacientes
                   </td>
                 </tr>
-              ))}
+              ) : filtered.map((p, i) => {
+                const color = avatarColor(p.name);
+                return (
+                  <tr
+                    key={i}
+                    style={{ borderBottom: `1px solid ${BORDER}`, transition: "background 0.12s", cursor: "pointer" }}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = "#f9fafb")}
+                    onMouseLeave={(e) => (e.currentTarget.style.background = "transparent")}
+                    onClick={() => setSelected(p)}
+                  >
+                    <td style={{ padding: "0.875rem 1rem" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+                        <div style={{ width: "2rem", height: "2rem", borderRadius: "50%", background: `${color}22`, border: `1.5px solid ${color}`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: "0.7rem", fontWeight: 700, color, flexShrink: 0 }}>
+                          {initials(p.name)}
+                        </div>
+                        <span style={{ color: "#1a1a1f", fontWeight: 500, whiteSpace: "nowrap" }}>{p.name}</span>
+                      </div>
+                    </td>
+                    <td style={{ padding: "0.875rem 1rem", color: MUTED, whiteSpace: "nowrap" }}>{p.phone}</td>
+                    <td style={{ padding: "0.875rem 1rem", color: MUTED }}>{p.email || "—"}</td>
+                    <td style={{ padding: "0.875rem 1rem", color: MUTED, whiteSpace: "nowrap" }}>{p.lastVisit || "—"}</td>
+                    <td style={{ padding: "0.875rem 1rem" }}>
+                      {p.nextAppointment ? (
+                        <span style={{ background: "rgba(79,158,255,0.1)", color: "#1a9db5", padding: "0.2rem 0.6rem", borderRadius: "999px", fontSize: "0.75rem", fontWeight: 600, whiteSpace: "nowrap" }}>
+                          {p.nextAppointment}
+                        </span>
+                      ) : (
+                        <span style={{ color: DIM, fontSize: "0.8rem" }}>—</span>
+                      )}
+                    </td>
+                    <td style={{ padding: "0.875rem 1rem" }}>
+                      <button
+                        onClick={(e) => { e.stopPropagation(); setSelected(p); }}
+                        style={{ background: "rgba(79,158,255,0.1)", border: "1px solid rgba(79,158,255,0.2)", borderRadius: "0.4rem", color: "#1a9db5", padding: "0.25rem 0.6rem", fontSize: "0.75rem", cursor: "pointer", fontWeight: 600 }}
+                      >
+                        Ver
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
-        <div className="px-4 py-3 border-t border-gray-100 text-xs text-gray-400">
-          {filtered.length} de {patients.length} pacientes
+        <div style={{ padding: "0.75rem 1rem", borderTop: `1px solid ${BORDER}` }}>
+          <p style={{ color: DIM, fontSize: "0.78rem" }}>{filtered.length} de {patients.length} pacientes</p>
         </div>
       </div>
     </div>

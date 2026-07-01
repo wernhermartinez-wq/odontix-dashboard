@@ -5,38 +5,38 @@ type Estado = 'frio' | 'contactado' | 'demo' | 'propuesta' | 'cerrado';
 type PlanInteres = 'basic' | 'professional' | 'premium';
 
 interface Prospecto {
-  id: string;
-  nombre: string;
-  contacto: string;
-  ciudad: string;
-  telefono: string;
-  email: string;
-  estado: Estado;
-  plan_interes: PlanInteres;
-  notas: string;
-  proxima_accion: string;
-  created_at: string;
+  id: string; nombre: string; contacto: string; ciudad: string;
+  telefono: string; email: string; estado: Estado;
+  plan_interes: PlanInteres; notas: string; proxima_accion: string; created_at: string;
 }
 
-const COLUMNAS: { id: Estado; label: string; color: string; bg: string; dot: string }[] = [
-  { id: 'frio',       label: 'Frío',       color: 'text-gray-500',  bg: 'bg-gray-50',    dot: 'bg-gray-400' },
-  { id: 'contactado', label: 'Contactado', color: 'text-blue-600',  bg: 'bg-blue-50',    dot: 'bg-blue-500' },
-  { id: 'demo',       label: 'Demo',       color: 'text-yellow-600',bg: 'bg-yellow-50',  dot: 'bg-yellow-500' },
-  { id: 'propuesta',  label: 'Propuesta',  color: 'text-orange-600',bg: 'bg-orange-50',  dot: 'bg-orange-500' },
-  { id: 'cerrado',    label: 'Cerrado ✓',  color: 'text-green-600', bg: 'bg-green-50',   dot: 'bg-green-500' },
+const COLUMNAS: { id: Estado; label: string; neon: string; glow: string }[] = [
+  { id: 'frio',       label: 'Frío',       neon: '#7a7a8a', glow: '#f0f2f5' },
+  { id: 'contactado', label: 'Contactado', neon: '#1a9db5',  glow: 'rgba(19,122,140,0.08)' },
+  { id: 'demo',       label: 'Demo',       neon: '#FFBB00',  glow: 'rgba(255,187,0,0.12)' },
+  { id: 'propuesta',  label: 'Propuesta',  neon: '#FF8C00',  glow: 'rgba(255,140,0,0.12)' },
+  { id: 'cerrado',    label: 'Cerrado ✓',  neon: '#00E878',  glow: 'rgba(0,232,120,0.12)' },
 ];
 
-const PLAN_COLORS: Record<PlanInteres, string> = {
-  basic:        'bg-gray-100 text-gray-600',
-  professional: 'bg-blue-100 text-blue-700',
-  premium:      'bg-purple-100 text-purple-700',
+const PLAN_STYLE: Record<PlanInteres, { bg: string; color: string }> = {
+  basic:        { bg: '#f0f2f5', color: '#5c5c6b' },
+  professional: { bg: 'rgba(79,158,255,0.14)',  color: '#1a9db5' },
+  premium:      { bg: 'rgba(167,139,250,0.14)', color: '#3dc0d8' },
 };
 
 const EMPTY_FORM = {
-  nombre: '', contacto: '', ciudad: '', telefono: '',
-  email: '', estado: 'frio' as Estado, plan_interes: 'professional' as PlanInteres,
+  nombre: '', contacto: '', ciudad: '', telefono: '', email: '',
+  estado: 'frio' as Estado, plan_interes: 'professional' as PlanInteres,
   notas: '', proxima_accion: '',
 };
+
+const TEXT_MUTED = '#5c5c6b';
+const TEXT_DIM = '#9a9aaa';
+const INPUT_STYLE = {
+  width: '100%', background: '#f4f6f8', border: '1px solid rgba(0,0,0,0.08)',
+  borderRadius: '0.5rem', padding: '0.5rem 0.75rem', fontSize: '13px', color: '#1a1a1f', outline: 'none',
+};
+const SELECT_STYLE = { ...INPUT_STYLE, cursor: 'pointer' };
 
 export default function AdminPipelinePage({ onConvertir }: { onConvertir?: (p: Prospecto) => void }) {
   const [prospectos, setProspectos] = useState<Prospecto[]>([]);
@@ -55,20 +55,10 @@ export default function AdminPipelinePage({ onConvertir }: { onConvertir?: (p: P
     setLoading(false);
   }
 
-  function abrirNuevo() {
-    setEditando(null);
-    setForm(EMPTY_FORM);
-    setShowModal(true);
-  }
-
+  function abrirNuevo() { setEditando(null); setForm(EMPTY_FORM); setShowModal(true); }
   function abrirEditar(p: Prospecto) {
     setEditando(p);
-    setForm({
-      nombre: p.nombre, contacto: p.contacto || '', ciudad: p.ciudad || '',
-      telefono: p.telefono || '', email: p.email || '', estado: p.estado,
-      plan_interes: p.plan_interes || 'professional',
-      notas: p.notas || '', proxima_accion: p.proxima_accion || '',
-    });
+    setForm({ nombre: p.nombre, contacto: p.contacto||'', ciudad: p.ciudad||'', telefono: p.telefono||'', email: p.email||'', estado: p.estado, plan_interes: p.plan_interes||'professional', notas: p.notas||'', proxima_accion: p.proxima_accion||'' });
     setShowModal(true);
   }
 
@@ -96,91 +86,75 @@ export default function AdminPipelinePage({ onConvertir }: { onConvertir?: (p: P
   }
 
   const byEstado = (estado: Estado) => prospectos.filter(p => p.estado === estado);
-  const totalMRREstimado = prospectos.filter(p => p.estado === 'cerrado').reduce((s, p) => {
-    return s + (p.plan_interes === 'premium' ? 229 : p.plan_interes === 'professional' ? 149 : 89);
-  }, 0);
-  const enPropuesta = prospectos.filter(p => p.estado === 'propuesta').length;
+  const totalMRR = prospectos.filter(p => p.estado === 'cerrado').reduce((s, p) =>
+    s + (p.plan_interes === 'premium' ? 229 : p.plan_interes === 'professional' ? 149 : 89), 0);
 
   return (
     <div className="p-6 h-full flex flex-col">
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Pipeline comercial</h1>
-          <p className="text-gray-500 text-sm mt-0.5">{prospectos.length} prospectos · {enPropuesta} en propuesta · <span className="text-green-600 font-medium">{totalMRREstimado}€/mes potencial cerrado</span></p>
+          <h1 className="text-2xl font-bold" style={{ color: '#1a1a1f', fontFamily: 'Manrope, system-ui, sans-serif' }}>Pipeline comercial</h1>
+          <p className="text-sm mt-0.5" style={{ color: TEXT_MUTED }}>
+            {prospectos.length} prospectos · {byEstado('propuesta').length} en propuesta ·{' '}
+            <span style={{ color: '#00E878', fontWeight: 600 }}>{totalMRR}€/mes cerrado</span>
+          </p>
         </div>
-        <button
-          onClick={abrirNuevo}
-          className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center gap-2"
-        >
+        <button onClick={abrirNuevo}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all"
+          style={{ background: 'linear-gradient(135deg, #137a8c, #0f5e70)', boxShadow: '0 0 16px rgba(19,122,140,0.35)' }}>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
           Nuevo prospecto
         </button>
       </div>
 
-      {/* Kanban */}
       {loading ? (
-        <div className="text-gray-400 text-sm">Cargando...</div>
+        <div className="text-sm" style={{ color: TEXT_MUTED }}>Cargando...</div>
       ) : (
         <div className="flex gap-4 overflow-x-auto pb-4 flex-1">
           {COLUMNAS.map(col => (
-            <div
-              key={col.id}
-              className="flex-shrink-0 w-64 flex flex-col"
-              onDragOver={(e) => e.preventDefault()}
-              onDrop={async (e) => {
-                e.preventDefault();
-                if (dragging) await cambiarEstado(dragging, col.id);
-                setDragging(null);
-              }}
-            >
+            <div key={col.id} className="flex-shrink-0 w-64 flex flex-col"
+              onDragOver={e => e.preventDefault()}
+              onDrop={async e => { e.preventDefault(); if (dragging) await cambiarEstado(dragging, col.id); setDragging(null); }}>
               {/* Column header */}
-              <div className={`flex items-center gap-2 px-3 py-2 rounded-t-lg ${col.bg} border border-b-0 border-gray-200`}>
-                <span className={`w-2 h-2 rounded-full ${col.dot}`} />
-                <span className={`text-xs font-semibold uppercase tracking-wide ${col.color}`}>{col.label}</span>
-                <span className="ml-auto text-xs text-gray-400 font-medium">{byEstado(col.id).length}</span>
+              <div className="flex items-center gap-2 px-3 py-2.5 rounded-t-xl" style={{ background: col.glow, border: `1px solid ${col.neon}22`, borderBottom: 'none' }}>
+                <span className="w-2 h-2 rounded-full" style={{ background: col.neon, boxShadow: `0 0 6px ${col.neon}` }} />
+                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: col.neon }}>{col.label}</span>
+                <span className="ml-auto text-xs font-medium" style={{ color: TEXT_DIM }}>{byEstado(col.id).length}</span>
               </div>
-
-              {/* Cards */}
-              <div className={`flex-1 border border-gray-200 rounded-b-lg p-2 space-y-2 min-h-32 ${col.bg}`}>
-                {byEstado(col.id).map(p => (
-                  <div
-                    key={p.id}
-                    draggable
-                    onDragStart={() => setDragging(p.id)}
-                    onDragEnd={() => setDragging(null)}
-                    className={`bg-white rounded-lg border border-gray-200 p-3 shadow-sm cursor-grab active:cursor-grabbing hover:shadow-md transition-shadow ${dragging === p.id ? 'opacity-50' : ''}`}
-                  >
-                    <div className="flex items-start justify-between gap-1 mb-1.5">
-                      <p className="font-semibold text-gray-900 text-sm leading-tight">{p.nombre}</p>
-                      <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded flex-shrink-0 ${PLAN_COLORS[p.plan_interes || 'professional']}`}>
-                        {(p.plan_interes || 'professional').charAt(0).toUpperCase() + (p.plan_interes || 'professional').slice(1)}
-                      </span>
-                    </div>
-
-                    {p.ciudad && <p className="text-xs text-gray-400 mb-1">📍 {p.ciudad}</p>}
-                    {p.contacto && <p className="text-xs text-gray-500 truncate">{p.contacto}</p>}
-                    {p.proxima_accion && (
-                      <p className="text-xs text-orange-600 mt-1.5 font-medium truncate">→ {p.proxima_accion}</p>
-                    )}
-
-                    <div className="flex items-center gap-1 mt-2 pt-2 border-t border-gray-100">
-                      <button onClick={() => abrirEditar(p)} className="flex-1 text-xs text-blue-500 hover:text-blue-700 text-left">Editar</button>
-                      {p.estado === 'cerrado' && onConvertir && (
-                        <button
-                          onClick={() => onConvertir(p)}
-                          className="text-xs bg-green-100 text-green-700 hover:bg-green-200 px-2 py-0.5 rounded font-medium transition-colors"
-                        >
-                          Convertir
-                        </button>
+              {/* Column body */}
+              <div className="flex-1 rounded-b-xl p-2 space-y-2 min-h-32" style={{ background: '#f9fafb', border: `1px solid rgba(255,255,255,0.06)`, borderTop: 'none' }}>
+                {byEstado(col.id).map(p => {
+                  const ps = PLAN_STYLE[p.plan_interes || 'professional'];
+                  return (
+                    <div key={p.id} draggable onDragStart={() => setDragging(p.id)} onDragEnd={() => setDragging(null)}
+                      className="rounded-xl p-3 cursor-grab active:cursor-grabbing transition-all"
+                      style={{ background: dragging === p.id ? '#f9fafb' : 'rgba(0,0,0,0.06)', border: '1px solid rgba(0,0,0,0.08)', opacity: dragging === p.id ? 0.5 : 1 }}
+                      onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)')}
+                      onMouseLeave={e => (e.currentTarget.style.borderColor = '#f0f2f5')}>
+                      <div className="flex items-start justify-between gap-1 mb-1.5">
+                        <p className="font-semibold text-white text-sm leading-tight">{p.nombre}</p>
+                        <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded flex-shrink-0" style={ps}>
+                          {(p.plan_interes || 'professional').charAt(0).toUpperCase() + (p.plan_interes || 'professional').slice(1)}
+                        </span>
+                      </div>
+                      {p.ciudad && <p className="text-xs mb-1" style={{ color: TEXT_MUTED }}>📍 {p.ciudad}</p>}
+                      {p.contacto && <p className="text-xs truncate" style={{ color: TEXT_MUTED }}>{p.contacto}</p>}
+                      {p.proxima_accion && (
+                        <p className="text-xs mt-1.5 font-medium truncate" style={{ color: '#FFBB00' }}>→ {p.proxima_accion}</p>
                       )}
-                      <button onClick={() => eliminar(p.id)} className="text-xs text-red-400 hover:text-red-600">✕</button>
+                      <div className="flex items-center gap-1 mt-2 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+                        <button onClick={() => abrirEditar(p)} className="flex-1 text-xs text-left transition-colors" style={{ color: '#1a9db5' }}>Editar</button>
+                        {p.estado === 'cerrado' && onConvertir && (
+                          <button onClick={() => onConvertir(p)} className="text-xs px-2 py-0.5 rounded font-medium transition-colors"
+                            style={{ background: 'rgba(0,232,120,0.12)', color: '#00E878' }}>Convertir</button>
+                        )}
+                        <button onClick={() => eliminar(p.id)} className="text-xs transition-colors" style={{ color: '#FF3C5A' }}>✕</button>
+                      </div>
                     </div>
-                  </div>
-                ))}
-
+                  );
+                })}
                 {byEstado(col.id).length === 0 && (
-                  <div className="text-center py-6 text-gray-300 text-xs">Sin prospectos</div>
+                  <div className="text-center py-6 text-xs" style={{ color: TEXT_DIM }}>Sin prospectos</div>
                 )}
               </div>
             </div>
@@ -188,85 +162,56 @@ export default function AdminPipelinePage({ onConvertir }: { onConvertir?: (p: P
         </div>
       )}
 
-      {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl max-h-[90vh] overflow-y-auto">
-            <h2 className="text-lg font-bold text-gray-900 mb-5">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.4)' }}>
+          <div style={{ background: '#ffffff', border: '1px solid rgba(79,158,255,0.2)', borderRadius: '1rem', padding: '1.5rem', width: '100%', maxWidth: '32rem', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 0 40px rgba(79,158,255,0.1)' }}>
+            <h2 className="text-lg font-bold mb-5" style={{ color: '#1a1a1f', fontFamily: 'Manrope, system-ui, sans-serif' }}>
               {editando ? 'Editar prospecto' : 'Nuevo prospecto'}
             </h2>
-
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div className="col-span-2">
-                  <label className="block text-xs text-gray-500 mb-1">Nombre clínica / dentista *</label>
-                  <input value={form.nombre} onChange={e => setForm({...form, nombre: e.target.value})}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-                    placeholder="Clínica Dr. García" />
+                  <label className="block text-xs mb-1" style={{ color: TEXT_MUTED }}>Nombre clínica *</label>
+                  <input value={form.nombre} onChange={e => setForm({...form, nombre: e.target.value})} style={INPUT_STYLE} placeholder="Clínica Dr. García" onFocus={e => (e.target.style.borderColor = 'rgba(79,158,255,0.6)')} onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.08)')} />
                 </div>
+                {[
+                  { label: 'Contacto', key: 'contacto', placeholder: 'Dr. García' },
+                  { label: 'Ciudad', key: 'ciudad', placeholder: 'Madrid' },
+                  { label: 'Teléfono', key: 'telefono', placeholder: '+34 600 000 000' },
+                  { label: 'Email', key: 'email', placeholder: 'clinica@mail.com' },
+                ].map(f => (
+                  <div key={f.key}>
+                    <label className="block text-xs mb-1" style={{ color: TEXT_MUTED }}>{f.label}</label>
+                    <input value={(form as any)[f.key]} onChange={e => setForm({...form, [f.key]: e.target.value})} style={INPUT_STYLE} placeholder={f.placeholder} onFocus={e => (e.target.style.borderColor = 'rgba(79,158,255,0.6)')} onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.08)')} />
+                  </div>
+                ))}
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Persona de contacto</label>
-                  <input value={form.contacto} onChange={e => setForm({...form, contacto: e.target.value})}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-                    placeholder="Dr. García" />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">Ciudad</label>
-                  <input value={form.ciudad} onChange={e => setForm({...form, ciudad: e.target.value})}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-                    placeholder="Madrid" />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">Teléfono</label>
-                  <input value={form.telefono} onChange={e => setForm({...form, telefono: e.target.value})}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-                    placeholder="+34 600 000 000" />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">Email</label>
-                  <input type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-                    placeholder="clinica@mail.com" />
-                </div>
-                <div>
-                  <label className="block text-xs text-gray-500 mb-1">Estado</label>
-                  <select value={form.estado} onChange={e => setForm({...form, estado: e.target.value as Estado})}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 bg-white">
+                  <label className="block text-xs mb-1" style={{ color: TEXT_MUTED }}>Estado</label>
+                  <select value={form.estado} onChange={e => setForm({...form, estado: e.target.value as Estado})} style={SELECT_STYLE}>
                     {COLUMNAS.map(c => <option key={c.id} value={c.id}>{c.label}</option>)}
                   </select>
                 </div>
                 <div>
-                  <label className="block text-xs text-gray-500 mb-1">Plan de interés</label>
-                  <select value={form.plan_interes} onChange={e => setForm({...form, plan_interes: e.target.value as PlanInteres})}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 bg-white">
-                    <option value="basic">Basic — 89€/mes</option>
-                    <option value="professional">Professional — 149€/mes</option>
-                    <option value="premium">Premium — 229€/mes</option>
+                  <label className="block text-xs mb-1" style={{ color: TEXT_MUTED }}>Plan de interés</label>
+                  <select value={form.plan_interes} onChange={e => setForm({...form, plan_interes: e.target.value as PlanInteres})} style={SELECT_STYLE}>
+                    <option value="basic">Basic — 109€/mes</option>
+                    <option value="professional">Professional — 189€/mes</option>
+                    <option value="premium">Premium — 279€/mes</option>
                   </select>
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs text-gray-500 mb-1">Próxima acción</label>
-                  <input value={form.proxima_accion} onChange={e => setForm({...form, proxima_accion: e.target.value})}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500"
-                    placeholder="Enviar propuesta el viernes" />
+                  <label className="block text-xs mb-1" style={{ color: TEXT_MUTED }}>Próxima acción</label>
+                  <input value={form.proxima_accion} onChange={e => setForm({...form, proxima_accion: e.target.value})} style={INPUT_STYLE} placeholder="Enviar propuesta el viernes" onFocus={e => (e.target.style.borderColor = 'rgba(79,158,255,0.6)')} onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.08)')} />
                 </div>
                 <div className="col-span-2">
-                  <label className="block text-xs text-gray-500 mb-1">Notas</label>
-                  <textarea value={form.notas} onChange={e => setForm({...form, notas: e.target.value})}
-                    rows={3}
-                    className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-blue-500 resize-none"
-                    placeholder="Interesado en automatizar citas de ortodoncia..." />
+                  <label className="block text-xs mb-1" style={{ color: TEXT_MUTED }}>Notas</label>
+                  <textarea value={form.notas} onChange={e => setForm({...form, notas: e.target.value})} rows={3} style={{ ...INPUT_STYLE, resize: 'none' }} placeholder="Interesado en automatizar citas..." onFocus={e => (e.target.style.borderColor = 'rgba(79,158,255,0.6)')} onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.08)')} />
                 </div>
               </div>
             </div>
-
             <div className="flex gap-3 mt-5">
-              <button onClick={() => setShowModal(false)}
-                className="flex-1 border border-gray-200 rounded-lg py-2.5 text-sm text-gray-600 hover:bg-gray-50 transition-colors">
-                Cancelar
-              </button>
-              <button onClick={guardar} disabled={!form.nombre || saving}
-                className="flex-1 bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white rounded-lg py-2.5 text-sm font-medium transition-colors">
+              <button onClick={() => setShowModal(false)} className="flex-1 py-2.5 rounded-lg text-sm transition-colors" style={{ border: '1px solid rgba(0,0,0,0.08)', color: TEXT_MUTED }}>Cancelar</button>
+              <button onClick={guardar} disabled={!form.nombre || saving} className="flex-1 py-2.5 rounded-lg text-sm font-medium text-white disabled:opacity-50 transition-all" style={{ background: 'linear-gradient(135deg, #137a8c, #0f5e70)', boxShadow: '0 0 16px rgba(19,122,140,0.35)' }}>
                 {saving ? 'Guardando...' : editando ? 'Guardar cambios' : 'Crear prospecto'}
               </button>
             </div>
