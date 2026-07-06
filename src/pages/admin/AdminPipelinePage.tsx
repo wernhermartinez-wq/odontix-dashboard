@@ -19,7 +19,7 @@ const COLUMNAS: { id: Estado; label: string; neon: string; glow: string }[] = [
 ];
 
 const PLAN_STYLE: Record<PlanInteres, { bg: string; color: string }> = {
-  basic:        { bg: '#f0f2f5', color: '#5c5c6b' },
+  basic:        { bg: '#f0f2f5', color: 'rgba(240,240,245,0.5)' },
   professional: { bg: 'rgba(79,158,255,0.14)',  color: '#1a9db5' },
   premium:      { bg: 'rgba(167,139,250,0.14)', color: '#3dc0d8' },
 };
@@ -33,8 +33,8 @@ const EMPTY_FORM = {
 const TEXT_MUTED = '#5c5c6b';
 const TEXT_DIM = '#9a9aaa';
 const INPUT_STYLE = {
-  width: '100%', background: '#f4f6f8', border: '1px solid rgba(0,0,0,0.08)',
-  borderRadius: '0.5rem', padding: '0.5rem 0.75rem', fontSize: '13px', color: '#1a1a1f', outline: 'none',
+  width: '100%', background: '#0d1018', border: '1px solid rgba(0,0,0,0.08)',
+  borderRadius: '0.5rem', padding: '0.5rem 0.75rem', fontSize: '13px', color: 'rgba(240,240,245,0.95)', outline: 'none',
 };
 const SELECT_STYLE = { ...INPUT_STYLE, cursor: 'pointer' };
 
@@ -93,7 +93,7 @@ export default function AdminPipelinePage({ onConvertir }: { onConvertir?: (p: P
     <div className="p-6 h-full flex flex-col">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: '#1a1a1f', fontFamily: 'Manrope, system-ui, sans-serif' }}>Pipeline comercial</h1>
+          <h1 className="text-2xl font-bold" style={{ color: 'rgba(240,240,245,0.95)', fontFamily: 'Manrope, system-ui, sans-serif' }}>Pipeline comercial</h1>
           <p className="text-sm mt-0.5" style={{ color: TEXT_MUTED }}>
             {prospectos.length} prospectos · {byEstado('propuesta').length} en propuesta ·{' '}
             <span style={{ color: '#00E878', fontWeight: 600 }}>{totalMRR}€/mes cerrado</span>
@@ -164,8 +164,8 @@ export default function AdminPipelinePage({ onConvertir }: { onConvertir?: (p: P
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.4)' }}>
-          <div style={{ background: '#ffffff', border: '1px solid rgba(79,158,255,0.2)', borderRadius: '1rem', padding: '1.5rem', width: '100%', maxWidth: '32rem', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 0 40px rgba(79,158,255,0.1)' }}>
-            <h2 className="text-lg font-bold mb-5" style={{ color: '#1a1a1f', fontFamily: 'Manrope, system-ui, sans-serif' }}>
+          <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(79,158,255,0.2)', borderRadius: '1rem', padding: '1.5rem', width: '100%', maxWidth: '32rem', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 0 40px rgba(79,158,255,0.1)' }}>
+            <h2 className="text-lg font-bold mb-5" style={{ color: 'rgba(240,240,245,0.95)', fontFamily: 'Manrope, system-ui, sans-serif' }}>
               {editando ? 'Editar prospecto' : 'Nuevo prospecto'}
             </h2>
             <div className="space-y-3">

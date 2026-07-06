@@ -1,13 +1,14 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 import type { Plan } from '@/hooks/usePlan';
+import odontixLogo from '@/assets/odontixsinfondo.png';
 
 interface BotStats { totalCitas: number; citasEsteMes: number; citasHoy: number; confirmacionesEnviadas: number; }
 interface BasicPlanPageProps { clinicName?: string; plan: Plan; clienteId?: string | null; onSignOut: () => void; viewingAs?: { id: string; nombre: string } | null; }
 
-const TEXT_MUTED = '#5c5c6b';
-const TEXT_DIM = '#9a9aaa';
-const CARD = { background: '#ffffff', border: '1px solid rgba(0,0,0,0.07)', borderRadius: '1rem' };
+const TEXT_MUTED = 'rgba(255,255,255,0.6)';
+const TEXT_DIM = 'rgba(255,255,255,0.35)';
+const CARD = { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem' };
 
 export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, viewingAs }: BasicPlanPageProps) {
   const isBasic = plan === 'basic';
@@ -42,7 +43,18 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
   ] : null;
 
   return (
-    <div className={`min-h-screen flex flex-col items-center justify-center p-6 ${viewingAs ? 'pt-16' : ''}`} style={{ background: '#f4f6f8' }}>
+    <div className={`min-h-screen flex flex-col items-center justify-center p-6 relative overflow-hidden ${viewingAs ? 'pt-16' : ''}`} style={{ background: 'linear-gradient(155deg, #071a1f 0%, #0a2530 60%, #0d3040 100%)' }}>
+      {/* Grid overlay */}
+      <div className="absolute inset-0 pointer-events-none" style={{
+        backgroundImage: 'linear-gradient(rgba(19,122,140,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(19,122,140,0.07) 1px, transparent 1px)',
+        backgroundSize: '64px 64px',
+      }} />
+      {/* Círculo decorativo */}
+      <div className="absolute pointer-events-none" style={{
+        width: 600, height: 600, borderRadius: '50%',
+        background: 'radial-gradient(circle, rgba(19,122,140,0.1) 0%, transparent 70%)',
+        top: '-15%', left: '-20%',
+      }} />
       {viewingAs && (
         <div className="fixed top-0 left-0 right-0 z-50 bg-orange-500 text-white text-xs font-medium py-1.5 px-4 flex items-center justify-between">
           <span>Vista admin: <strong>{viewingAs.nombre}</strong><span className="ml-2 opacity-80">– Plan basic</span></span>
@@ -50,18 +62,11 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
         </div>
       )}
 
-      <div className="w-full max-w-lg">
+      <div className="w-full max-w-lg relative z-10">
         {/* Logo */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-3 mb-3">
-            <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'linear-gradient(135deg, #137a8c, #0f5e70)', boxShadow: '0 0 24px rgba(59,110,232,0.45)' }}>
-              <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            </div>
-            <span className="text-2xl text-white tracking-tight" style={{ fontFamily: 'Manrope, system-ui, sans-serif', fontWeight: 800 }}>Odontix</span>
-          </div>
-          {clinicName && <p className="text-sm" style={{ color: TEXT_MUTED }}>Bienvenido, <span className="text-white font-medium">{clinicName}</span></p>}
+          <img src={odontixLogo} alt="Odontix" style={{ height: 56, width: 'auto', margin: '0 auto 12px' }} />
+          {clinicName && <p className="text-sm" style={{ color: TEXT_MUTED }}>Bienvenido, <span style={{ color: '#ffffff', fontWeight: 600 }}>{clinicName}</span></p>}
         </div>
 
         {/* Bot status card */}
@@ -71,7 +76,7 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
               <div className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ background: '#00E878', boxShadow: '0 0 8px #00E878' }} />
               <span className="font-semibold text-sm" style={{ color: '#00E878' }}>Bot WhatsApp activo</span>
             </div>
-            <span className="text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wide" style={{ background: '#f0f2f5', color: TEXT_MUTED }}>Plan Basic</span>
+            <span className="text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wide" style={{ background: 'rgba(19,122,140,0.2)', border: '1px solid rgba(19,122,140,0.4)', color: '#1a9db5' }}>Plan Basic</span>
           </div>
 
           <p className="text-sm leading-relaxed mb-5" style={{ color: TEXT_MUTED }}>
@@ -81,16 +86,16 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
           {loadingStats ? (
             <div className="grid grid-cols-2 gap-3">
               {[0,1,2,3].map(i => (
-                <div key={i} className="rounded-xl p-4 animate-pulse" style={{ background: '#ffffff' }}>
-                  <div className="h-6 rounded w-12 mb-1" style={{ background: '#eef0f3' }} />
-                  <div className="h-3 rounded w-24" style={{ background: '#f4f6f8' }} />
+                <div key={i} className="rounded-xl p-4 animate-pulse" style={{ background: 'rgba(255,255,255,0.04)' }}>
+                  <div className="h-6 rounded w-12 mb-1" style={{ background: 'rgba(255,255,255,0.1)' }} />
+                  <div className="h-3 rounded w-24" style={{ background: 'rgba(255,255,255,0.06)' }} />
                 </div>
               ))}
             </div>
           ) : statItems ? (
             <div className="grid grid-cols-2 gap-3">
               {statItems.map((s, i) => (
-                <div key={i} className="rounded-xl p-4" style={{ background: '#ffffff', border: '1px solid rgba(255,255,255,0.06)' }}>
+                <div key={i} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
                   <p className="text-2xl font-bold" style={{ color: s.neon, textShadow: `0 0 16px ${s.glow}` }}>{s.value.toLocaleString()}</p>
                   <p className="text-xs mt-0.5" style={{ color: TEXT_DIM }}>{s.label}</p>
                 </div>
@@ -133,12 +138,12 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
         {isBasic && (
           <div className="rounded-2xl p-5 text-white" style={{ background: 'linear-gradient(135deg, rgba(19,122,140,0.25) 0%, rgba(42,85,200,0.4) 100%)', border: '1px solid rgba(26,157,181,0.3)', boxShadow: '0 0 30px rgba(0,0,0,0.06)' }}>
             <p className="font-semibold text-sm mb-1" style={{ fontFamily: 'Manrope, system-ui, sans-serif' }}>Ver el dashboard completo</p>
-            <p className="text-xs leading-relaxed mb-4" style={{ color: '#5c5c6b' }}>
+            <p className="text-xs leading-relaxed mb-4" style={{ color: 'rgba(255,255,255,0.55)' }}>
               Agenda visual, historial de pacientes, estadísticas de rendimiento y seguimiento de ausencias.
             </p>
             <a href="mailto:wernher.martinez@gmail.com?subject=Actualizar a Professional"
               className="block text-center font-semibold text-sm rounded-xl py-2.5 transition-all"
-              style={{ background: '#1a9db5', color: '#f4f6f8', boxShadow: '0 4px 16px rgba(19,122,140,0.2)' }}>
+              style={{ background: '#1a9db5', color: '#0d1018', boxShadow: '0 4px 16px rgba(19,122,140,0.2)' }}>
               Actualizar a Professional — 189€/mes
             </a>
           </div>

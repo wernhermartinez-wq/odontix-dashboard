@@ -49,7 +49,7 @@ const inactiveStyle = { color: 'rgba(240,240,245,0.45)' };
 
 export default function AdminSidebar({ currentPage, onNavigate, viewingAs, onExitViewAs, onSignOut }: AdminSidebarProps) {
   return (
-    <aside style={{ background: '#071a1f', borderRight: '1px solid rgba(19,122,140,0.12)' }} className="w-64 flex-shrink-0 flex flex-col h-full">
+    <aside style={{ background: 'linear-gradient(175deg, #071a1f 0%, #0a2530 55%, #0d3040 100%)', borderRight: '1px solid rgba(19,122,140,0.15)' }} className="w-64 flex-shrink-0 flex flex-col h-full">
       {/* Logo */}
       <div className="px-4 py-4" style={{ borderBottom: '1px solid rgba(19,122,140,0.12)' }}>
         <div className="flex items-center gap-3">

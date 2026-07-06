@@ -19,6 +19,8 @@ import type { AdminPage } from "@/components/AdminSidebar";
 
 export type Page = "dashboard" | "agenda" | "patients" | "absences" | "followups" | "stats" | "settings";
 
+const BG = '#0d1018';
+
 export default function App() {
   const { user, role, clienteId, loading: authLoading, signOut } = useAuth();
 
@@ -34,10 +36,10 @@ export default function App() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#f4f6f8' }}>
+      <div className="min-h-screen flex items-center justify-center" style={{ background: BG }}>
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-3" />
-          <p className="text-gray-400 text-sm">Cargando...</p>
+          <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin mx-auto mb-3" style={{ borderColor: '#4F9EFF', borderTopColor: 'transparent' }} />
+          <p className="text-sm" style={{ color: 'rgba(240,240,245,0.4)' }}>Cargando...</p>
         </div>
       </div>
     );
@@ -70,7 +72,7 @@ export default function App() {
     };
 
     return (
-      <div className="flex h-screen overflow-hidden" style={{ background: '#f4f6f8' }}>
+      <div className="flex h-screen overflow-hidden" style={{ background: BG }}>
         <AdminSidebar
           currentPage={adminPage}
           onNavigate={setAdminPage}
@@ -88,8 +90,8 @@ export default function App() {
   // PLAN LOADING
   if ((role === 'clinic' || viewingAs) && planLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center" style={{ background: '#f4f6f8' }}>
-        <div className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      <div className="min-h-screen flex items-center justify-center" style={{ background: BG }}>
+        <div className="w-6 h-6 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#4F9EFF', borderTopColor: 'transparent' }} />
       </div>
     );
   }
@@ -127,15 +129,17 @@ export default function App() {
   };
 
   return (
-    <div className="flex h-screen overflow-hidden font-sans" style={{ background: '#f4f6f8' }}>
+    <div className="flex h-screen overflow-hidden font-sans" style={{ background: BG }}>
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/40 z-20 lg:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 z-20 lg:hidden" style={{ background: 'rgba(0,0,0,0.6)' }} onClick={() => setSidebarOpen(false)} />
       )}
 
       {viewingAs && (
-        <div className="fixed top-0 left-0 right-0 z-50 bg-orange-500 text-white text-xs font-medium py-1.5 px-4 flex items-center justify-between">
-          <span>Vista admin: <strong>{viewingAs.nombre}</strong>{plan && <span className="ml-2 opacity-80">- Plan {plan}</span>}</span>
-          <button onClick={() => { setViewingAs(null); setCurrentPage('dashboard'); }} className="underline hover:no-underline">
+        <div className="fixed top-0 left-0 right-0 z-50 text-white text-xs font-medium py-1.5 px-4 flex items-center justify-between"
+          style={{ background: 'rgba(255,187,0,0.15)', borderBottom: '1px solid rgba(255,187,0,0.3)', backdropFilter: 'blur(8px)' }}>
+          <span style={{ color: '#FFBB00' }}>Vista admin: <strong>{viewingAs.nombre}</strong>{plan && <span className="ml-2 opacity-70">— Plan {plan}</span>}</span>
+          <button onClick={() => { setViewingAs(null); setCurrentPage('dashboard'); }}
+            className="underline hover:no-underline" style={{ color: '#FFBB00' }}>
             Volver al admin
           </button>
         </div>
@@ -153,13 +157,15 @@ export default function App() {
       />
 
       <div className={`flex-1 flex flex-col min-w-0 overflow-hidden ${viewingAs ? 'pt-8' : ''}`}>
-        <div className="lg:hidden flex items-center gap-3 px-4 py-3" style={{ background: '#f4f6f8', borderBottom: '1px solid rgba(0,0,0,0.07)' }}>
-          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-md" style={{ color: 'rgba(240,240,245,0.6)' }}>
+        <div className="lg:hidden flex items-center gap-3 px-4 py-3"
+          style={{ background: BG, borderBottom: '1px solid rgba(79,158,255,0.12)' }}>
+          <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-md"
+            style={{ color: 'rgba(240,240,245,0.6)' }}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
             </svg>
           </button>
-          <span className="font-semibold text-white">Odontix</span>
+          <span className="font-semibold" style={{ color: 'rgba(240,240,245,0.95)' }}>Odontix</span>
         </div>
         <main className="flex-1 overflow-y-auto">{renderPage()}</main>
       </div>

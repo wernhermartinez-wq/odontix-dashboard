@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Odontix — Prueba el Dashboard Premium gratis</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --teal:        #137a8c;
+      --teal-dark:   #0f5e70;
+      --teal-light:  #1a9db5;
+      --teal-pale:   #e8f6f9;
+      --bg:          #f4f6f8;
+      --white:       #ffffff;
+      --text:        #1a1a1f;
+      --text-2:      #5c5c6b;
+      --text-3:      #9a9aaa;
+      --border:      rgba(0,0,0,0.08);
+      --shadow-card: 0 2px 16px rgba(0,0,0,0.08);
+      --shadow-lg:   0 8px 40px rgba(0,0,0,0.12);
+      --green:       #00c760;
+      --radius:      14px;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Manrope', system-ui, sans-serif;
+      letter-spacing: -0.02em;
+    }
+
+    /* ── Navbar ── */
+    .nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .nav-logo { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-logo-icon {
+      width: 34px; height: 34px; border-radius: 9px;
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-light) 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 4px 12px rgba(19,122,140,0.3);
+    }
+    .nav-logo-icon svg { width: 18px; height: 18px; fill: white; }
+    .nav-logo-text {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 800; font-size: 18px; color: var(--text);
+      letter-spacing: -0.03em;
+    }
+    .nav-cta {
+      background: var(--teal);
+      color: white; border: none; cursor: pointer;
+      padding: 8px 20px; border-radius: 8px;
+      font-size: 13px; font-weight: 600; font-family: 'Inter', sans-serif;
+      transition: background 0.2s;
+      text-decoration: none;
+    }
+    .nav-cta:hover { background: var(--teal-dark); }
+
+    /* ── Hero ── */
+    .hero {
+      padding: 72px 24px 56px;
+      text-align: center;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--teal-pale); color: var(--teal);
+      border: 1px solid rgba(19,122,140,0.2);
+      border-radius: 100px; padding: 5px 14px;
+      font-size: 12px; font-weight: 600; letter-spacing: 0.02em;
+      margin-bottom: 24px;
+    }
+    .hero-badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 0 3px rgba(0,199,96,0.2);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { box-shadow: 0 0 0 3px rgba(0,199,96,0.2); }
+      50%      { box-shadow: 0 0 0 6px rgba(0,199,96,0.1); }
+    }
+    .hero h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      font-weight: 800; color: var(--text);
+      line-height: 1.15; margin-bottom: 20px;
+    }
+    .hero h1 span { color: var(--teal); }
+    .hero p {
+      font-size: 17px; color: var(--text-2);
+      max-width: 560px; margin: 0 auto 36px;
+    }
+    .hero-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+      color: white; border: none; cursor: pointer;
+      padding: 14px 28px; border-radius: 10px;
+      font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif;
+      box-shadow: 0 4px 16px rgba(19,122,140,0.3);
+      transition: transform 0.15s, box-shadow 0.15s;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(19,122,140,0.35); }
+    .btn-secondary {
+      background: white; color: var(--teal);
+      border: 1.5px solid rgba(19,122,140,0.3);
+      padding: 14px 28px; border-radius: 10px;
+      font-size: 15px; font-weight: 600; font-family: 'Inter', sans-serif;
+      cursor: pointer; transition: border-color 0.2s, background 0.2s;
+      text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-secondary:hover { border-color: var(--teal); background: var(--teal-pale); }
+
+    /* ── Dashboard mockup ── */
+    .mockup-wrap {
+      max-width: 960px; margin: 0 auto 72px;
+      padding: 0 16px;
+    }
+    .mockup-browser {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 20px 60px rgba(0,0,0,0.13);
+      overflow: hidden;
+    }
+    .mockup-bar {
+      background: #f0f2f5;
+      padding: 10px 16px;
+      display: flex; align-items: center; gap: 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    .mockup-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .mockup-url {
+      flex: 1; background: white; border-radius: 6px;
+      padding: 4px 12px; font-size: 11px; color: var(--text-3);
+      border: 1px solid var(--border); margin: 0 8px;
+      font-family: 'Inter', sans-serif;
+    }
+    .mockup-inner { display: flex; height: 420px; }
+    /* Sidebar */
+    .mock-sidebar {
+      width: 220px; flex-shrink: 0;
+      background: #071a1f;
+      display: flex; flex-direction: column;
+      padding: 16px 0;
+    }
+    .mock-sidebar-logo {
+      padding: 4px 16px 20px;
+      display: flex; align-items: center; gap: 8px;
+      border-bottom: 1px solid rgba(19,122,140,0.15);
+    }
+    .mock-logo-icon {
+      width: 28px; height: 28px; border-radius: 7px;
+      background: linear-gradient(135deg, #137a8c, #1a9db5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 13px;
+    }
+    .mock-logo-text {
+      font-family: 'Manrope', sans-serif;
+      font-weight: 800; font-size: 14px; color: white;
+    }
+    .mock-nav-label {
+      font-size: 9px; font-weight: 700; letter-spacing: 0.1em;
+      color: rgba(19,122,140,0.5); text-transform: uppercase;
+      padding: 16px 16px 6px;
+    }
+    .mock-nav-item {
+      display: flex; align-items: center; gap: 8px;
+      padding: 8px 16px; font-size: 12px;
+      color: rgba(240,240,245,0.45);
+      cursor: default;
+    }
+    .mock-nav-item.active {
+      background: rgba(19,122,140,0.18);
+      color: #1a9db5;
+      border-left: 2px solid #1a9db5;
+    }
+    .mock-nav-dot { width: 14px; height: 14px; border-radius: 3px; flex-shrink: 0; }
+
+    /* Main content */
+    .mock-main {
+      flex: 1; background: #f4f6f8;
+      padding: 20px; overflow: hidden;
+    }
+    .mock-topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 16px;
+    }
+    .mock-title { font-family: 'Manrope', sans-serif; font-size: 15px; font-weight: 700; color: #1a1a1f; }
+    .mock-date { font-size: 10px; color: #9a9aaa; }
+    .mock-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+    .mock-stat {
+      background: white; border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.07);
+      padding: 10px 12px;
+    }
+    .mock-stat-label { font-size: 9px; color: #9a9aaa; margin-bottom: 4px; }
+    .mock-stat-val { font-family: 'Manrope', sans-serif; font-size: 17px; font-weight: 800; color: #1a1a1f; }
+    .mock-stat-badge { font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 100px; margin-top: 4px; display: inline-block; }
+    .green { background: rgba(0,199,96,0.1); color: #00a352; }
+    .red   { background: rgba(255,60,90,0.1); color: #c0392b; }
+    .mock-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .mock-card {
+      background: white; border-radius: 10px;
+      border: 1px solid rgba(0,0,0,0.07);
+      padding: 12px; height: 130px; overflow: hidden;
+    }
+    .mock-card-title { font-size: 10px; font-weight: 600; color: #5c5c6b; margin-bottom: 10px; }
+    /* Mini chart bars */
+    .mini-bars { display: flex; align-items: flex-end; gap: 4px; height: 70px; }
+    .mini-bar { flex: 1; border-radius: 3px 3px 0 0; }
+    .mini-bar.teal  { background: #1a9db5; }
+    .mini-bar.red   { background: #FF3C5A; }
+    .mini-bar.gray  { background: rgba(0,0,0,0.08); }
+    /* Agenda list */
+    .mock-agenda-item {
+      display: flex; align-items: center; gap: 6px;
+      padding: 4px 0; border-bottom: 1px solid rgba(0,0,0,0.05);
+      font-size: 10px; color: #5c5c6b;
+    }
+    .mock-agenda-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+    .mock-wa-badge {
+      width: 16px; height: 16px; border-radius: 50%;
+      background: #25D366; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    /* ── Features ── */
+    .features {
+      max-width: 960px; margin: 0 auto 72px;
+      padding: 0 24px;
+    }
+    .section-label {
+      text-align: center; font-size: 12px; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--teal); margin-bottom: 12px;
+    }
+    .section-title {
+      text-align: center; font-size: clamp(24px, 3.5vw, 36px);
+      font-weight: 800; color: var(--text); margin-bottom: 48px;
+    }
+    .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+    .feature-card {
+      background: white; border-radius: var(--radius);
+      border: 1px solid var(--border);
+      padding: 28px 24px;
+      box-shadow: var(--shadow-card);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .feature-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lg); }
+    .feature-icon {
+      width: 48px; height: 48px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px; margin-bottom: 16px;
+    }
+    .feature-icon.teal   { background: rgba(19,122,140,0.1); }
+    .feature-icon.green  { background: rgba(0,199,96,0.1); }
+    .feature-icon.yellow { background: rgba(255,187,0,0.1); }
+    .feature-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+    .feature-card p  { font-size: 14px; color: var(--text-2); line-height: 1.6; }
+
+    /* ── Form section ── */
+    .form-section {
+      max-width: 640px; margin: 0 auto 96px;
+      padding: 0 24px;
+    }
+    .form-card {
+      background: white; border-radius: 20px;
+      border: 1px solid var(--border);
+      box-shadow: 0 12px 48px rgba(0,0,0,0.10);
+      overflow: hidden;
+    }
+    .form-header {
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+      padding: 32px 36px 28px;
+      text-align: center;
+    }
+    .form-header h2 { color: white; font-size: 22px; margin-bottom: 6px; }
+    .form-header p  { color: rgba(255,255,255,0.75); font-size: 14px; }
+    .form-body { padding: 32px 36px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media (max-width: 520px) { .form-row { grid-template-columns: 1fr; } }
+    .form-group { margin-bottom: 16px; }
+    .form-label {
+      display: block; font-size: 13px; font-weight: 600;
+      color: var(--text); margin-bottom: 6px;
+    }
+    .form-label span { color: var(--teal); }
+    .form-input {
+      width: 100%; padding: 11px 14px;
+      border: 1.5px solid #d4d9e0;
+      border-radius: 9px; font-size: 14px;
+      font-family: 'Inter', sans-serif; color: var(--text);
+      background: #fafbfc;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: var(--teal);
+      box-shadow: 0 0 0 3px rgba(19,122,140,0.12);
+      background: white;
+    }
+    .form-input::placeholder { color: #b0b0bc; }
+    .form-submit {
+      width: 100%; padding: 14px;
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+      color: white; border: none; cursor: pointer;
+      border-radius: 10px; font-size: 15px; font-weight: 700;
+      font-family: 'Inter', sans-serif;
+      box-shadow: 0 4px 16px rgba(19,122,140,0.3);
+      transition: transform 0.15s, box-shadow 0.15s;
+      margin-top: 8px;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .form-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(19,122,140,0.35); }
+    .form-submit:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+    .form-disclaimer {
+      text-align: center; font-size: 12px; color: var(--text-3);
+      margin-top: 14px;
+    }
+
+    /* ── Success state ── */
+    .success-card {
+      display: none;
+      padding: 40px 36px;
+      text-align: center;
+    }
+    .success-icon {
+      width: 64px; height: 64px; border-radius: 50%;
+      background: rgba(0,199,96,0.1); border: 2px solid rgba(0,199,96,0.3);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; margin: 0 auto 20px;
+    }
+    .success-card h3 { font-size: 22px; font-weight: 800; margin-bottom: 8px; }
+    .success-card p  { color: var(--text-2); font-size: 15px; margin-bottom: 28px; }
+    .credentials-box {
+      background: var(--teal-pale);
+      border: 1.5px solid rgba(19,122,140,0.25);
+      border-radius: 12px; padding: 20px 24px;
+      text-align: left; margin-bottom: 20px;
+    }
+    .credentials-box h4 {
+      font-size: 12px; font-weight: 700; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--teal); margin-bottom: 14px;
+    }
+    .cred-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .cred-row:last-child { margin-bottom: 0; }
+    .cred-label { font-size: 13px; color: var(--text-2); font-weight: 500; }
+    .cred-val {
+      font-size: 14px; font-weight: 700; color: var(--text);
+      background: white; padding: 5px 12px; border-radius: 6px;
+      border: 1px solid var(--border); font-family: 'Inter', monospace;
+      cursor: pointer; transition: background 0.15s;
+    }
+    .cred-val:hover { background: #f0f2f5; }
+    .cred-copy-tip { font-size: 11px; color: var(--text-3); margin-top: 10px; }
+    .btn-access {
+      width: 100%;
+      background: linear-gradient(135deg, var(--teal) 0%, var(--teal-dark) 100%);
+      color: white; border: none; cursor: pointer;
+      padding: 14px; border-radius: 10px;
+      font-size: 15px; font-weight: 700; font-family: 'Inter', sans-serif;
+      box-shadow: 0 4px 16px rgba(19,122,140,0.3);
+      transition: transform 0.15s; text-decoration: none;
+      display: flex; align-items: center; justify-content: center; gap: 8px;
+    }
+    .btn-access:hover { transform: translateY(-2px); }
+
+    /* ── Error banner ── */
+    .form-error {
+      display: none; background: rgba(220,38,38,0.07);
+      border: 1px solid rgba(220,38,38,0.25);
+      border-radius: 8px; padding: 10px 14px;
+      font-size: 13px; color: #c0392b; margin-bottom: 14px;
+    }
+
+    /* ── Footer ── */
+    footer {
+      text-align: center; padding: 32px 24px;
+      border-top: 1px solid var(--border);
+      font-size: 13px; color: var(--text-3);
+    }
+    footer a { color: var(--teal); text-decoration: none; }
+
+    /* Loading spinner */
+    .spinner {
+      width: 18px; height: 18px;
+      border: 2.5px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.7s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+<!-- ── Navbar ── -->
+<nav class="nav">
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-icon">
+      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
+    </div>
+    <span class="nav-logo-text">Odontix</span>
+  </a>
+  <a href="#acceso" class="nav-cta">Probar gratis →</a>
+</nav>
+
+<!-- ── Hero ── -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="hero-badge-dot"></span>
+    Demo disponible ahora — sin tarjeta de crédito
+  </div>
+  <h1>El dashboard que tu<br /><span>clínica odontológica</span><br />estaba esperando</h1>
+  <p>Automatiza citas vía WhatsApp, gestiona tu agenda y analiza el rendimiento de tu clínica — todo en un solo lugar.</p>
+  <div class="hero-actions">
+    <a href="#acceso" class="btn-primary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+      Acceder a la demo premium
+    </a>
+    <a href="#caracteristicas" class="btn-secondary">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>
+      Ver qué incluye
+    </a>
+  </div>
+</section>
+
+<!-- ── Dashboard Mockup ── -->
+<div class="mockup-wrap">
+  <div class="mockup-browser">
+    <div class="mockup-bar">
+      <div class="mockup-dot" style="background:#ff5f57"></div>
+      <div class="mockup-dot" style="background:#febc2e"></div>
+      <div class="mockup-dot" style="background:#28c840"></div>
+      <div class="mockup-url">app.odontix.click/dashboard</div>
+    </div>
+    <div class="mockup-inner">
+      <!-- Sidebar -->
+      <div class="mock-sidebar">
+        <div class="mock-sidebar-logo">
+          <div class="mock-logo-icon">🦷</div>
+          <span class="mock-logo-text">Odontix</span>
+        </div>
+        <div class="mock-nav-label">Clínica</div>
+        <div class="mock-nav-item active">
+          <div class="mock-nav-dot" style="background:#1a9db5;border-radius:3px"></div>
+          Dashboard
+        </div>
+        <div class="mock-nav-item">
+          <div class="mock-nav-dot" style="background:rgba(240,240,245,0.2)"></div>
+          Agenda
+        </div>
+        <div class="mock-nav-item">
+          <div class="mock-nav-dot" style="background:rgba(240,240,245,0.2)"></div>
+          Pacientes
+        </div>
+        <div class="mock-nav-item">
+          <div class="mock-nav-dot" style="background:rgba(240,240,245,0.2)"></div>
+          Follow-ups
+        </div>
+        <div class="mock-nav-label">Analytics</div>
+        <div class="mock-nav-item">
+          <div class="mock-nav-dot" style="background:rgba(240,240,245,0.2)"></div>
+          Estadísticas
+        </div>
+        <div class="mock-nav-item">
+          <div class="mock-nav-dot" style="background:rgba(240,240,245,0.2)"></div>
+          Ausencias
+        </div>
+      </div>
+      <!-- Main -->
+      <div class="mock-main">
+        <div class="mock-topbar">
+          <div>
+            <div class="mock-title">Buenos días, Dra. García 👋</div>
+            <div class="mock-date">Martes, 1 de julio · 14 citas hoy</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center">
+            <div style="width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,#137a8c,#1a9db5);display:flex;align-items:center;justify-content:center;font-size:11px;color:white;font-weight:700">G</div>
+          </div>
+        </div>
+        <!-- Stats -->
+        <div class="mock-stats">
+          <div class="mock-stat">
+            <div class="mock-stat-label">Citas hoy</div>
+            <div class="mock-stat-val">14</div>
+            <div class="mock-stat-badge green">+2 vs ayer</div>
+          </div>
+          <div class="mock-stat">
+            <div class="mock-stat-label">Confirmadas</div>
+            <div class="mock-stat-val">11</div>
+            <div class="mock-stat-badge green">78%</div>
+          </div>
+          <div class="mock-stat">
+            <div class="mock-stat-label">Ausencias</div>
+            <div class="mock-stat-val">2</div>
+            <div class="mock-stat-badge red">14%</div>
+          </div>
+          <div class="mock-stat">
+            <div class="mock-stat-label">WhatsApp</div>
+            <div class="mock-stat-val" style="color:#00c760">●</div>
+            <div class="mock-stat-badge green">Activo</div>
+          </div>
+        </div>
+        <!-- Grid -->
+        <div class="mock-grid">
+          <div class="mock-card">
+            <div class="mock-card-title">📊 Asistencia semanal</div>
+            <div class="mini-bars">
+              <div class="mini-bar teal" style="height:55%"></div>
+              <div class="mini-bar red"  style="height:20%"></div>
+              <div class="mini-bar gray" style="height:10%"></div>
+              <div class="mini-bar teal" style="height:80%"></div>
+              <div class="mini-bar teal" style="height:65%"></div>
+              <div class="mini-bar red"  style="height:15%"></div>
+              <div class="mini-bar teal" style="height:90%"></div>
+            </div>
+          </div>
+          <div class="mock-card">
+            <div class="mock-card-title">📅 Próximas citas</div>
+            <div class="mock-agenda-item">
+              <div class="mock-wa-badge"><svg width="8" height="8" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></div>
+              <span>09:00 · María López</span>
+            </div>
+            <div class="mock-agenda-item">
+              <div class="mock-agenda-dot" style="background:#1a9db5"></div>
+              <span>10:30 · Carlos Ruiz</span>
+            </div>
+            <div class="mock-agenda-item">
+              <div class="mock-agenda-dot" style="background:#FFBB00"></div>
+              <span>11:00 · Ana Torres</span>
+            </div>
+            <div class="mock-agenda-item">
+              <div class="mock-wa-badge"><svg width="8" height="8" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg></div>
+              <span>12:00 · Pedro Sanz</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Features ── -->
+<section class="features" id="caracteristicas">
+  <div class="section-label">¿Por qué Odontix?</div>
+  <div class="section-title">Todo lo que necesita tu clínica</div>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon green">🤖</div>
+      <h3>Bot de WhatsApp 24/7</h3>
+      <p>Confirma, cancela y reagenda citas automáticamente por WhatsApp. Tus pacientes responden sin llamadas ni esperas.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon teal">📅</div>
+      <h3>Agenda inteligente</h3>
+      <p>Visualiza tu agenda en tiempo real. Detecta huecos, gestiona ausencias y optimiza el tiempo de tu equipo.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon yellow">📊</div>
+      <h3>Analytics de clínica</h3>
+      <p>Tasas de asistencia, tratamientos más frecuentes, pacientes recurrentes. Datos reales para tomar mejores decisiones.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── Form ── -->
+<section class="form-section" id="acceso">
+  <div class="form-card">
+    <div class="form-header">
+      <h2>🦷 Accede a la demo premium</h2>
+      <p>Completa el formulario y recibe tus credenciales al instante</p>
+    </div>
+
+    <!-- FORM STATE -->
+    <div class="form-body" id="formState">
+      <div class="form-error" id="formError"></div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="nombre">Nombre <span>*</span></label>
+          <input class="form-input" type="text" id="nombre" name="nombre" placeholder="María" required autocomplete="given-name" />
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="apellido">Apellido <span>*</span></label>
+          <input class="form-input" type="text" id="apellido" name="apellido" placeholder="García" required autocomplete="family-name" />
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="clinica">Nombre de la clínica <span>*</span></label>
+        <input class="form-input" type="text" id="clinica" name="clinica" placeholder="Clínica Dental Sonrisa" required />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="email">Email profesional <span>*</span></label>
+        <input class="form-input" type="email" id="email" name="email" placeholder="maria@clinica.com" required autocomplete="email" />
+      </div>
+      <div class="form-group">
+        <label class="form-label" for="telefono">WhatsApp / Teléfono <span>*</span></label>
+        <input class="form-input" type="tel" id="telefono" name="telefono" placeholder="+34 600 000 000" required autocomplete="tel" />
+      </div>
+      <button class="form-submit" id="submitBtn" type="button" onclick="handleSubmit()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        Acceder ahora — es gratis
+      </button>
+      <p class="form-disclaimer">🔒 Sin spam. Tus datos son confidenciales y nunca se comparten con terceros.</p>
+    </div>
+
+    <!-- SUCCESS STATE -->
+    <div class="success-card" id="successState">
+      <div class="success-icon">✅</div>
+      <h3>¡Todo listo, <span id="successName"></span>!</h3>
+      <p>Hemos registrado tu clínica. Aquí tienes tus credenciales de acceso al dashboard premium:</p>
+      <div class="credentials-box">
+        <h4>🔑 Credenciales de demo</h4>
+        <div class="cred-row">
+          <span class="cred-label">Usuario (email)</span>
+          <span class="cred-val" onclick="copyToClipboard('demo@odontix.click', this)" title="Clic para copiar">demo@odontix.click</span>
+        </div>
+        <div class="cred-row">
+          <span class="cred-label">Contraseña</span>
+          <span class="cred-val" onclick="copyToClipboard('OdontixDemo2026', this)" title="Clic para copiar">OdontixDemo2026</span>
+        </div>
+        <div class="cred-copy-tip">👆 Haz clic en cada valor para copiarlo</div>
+      </div>
+      <a href="./index.html" class="btn-access" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
+        Entrar al dashboard ahora
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ── -->
+<footer>
+  <p>© 2026 Odontix · <a href="mailto:info@odontix.click">info@odontix.click</a> · Hecho con 🦷 para clínicas</p>
+</footer>
+
+<script>
+  // ───────────────────────────────────────────
+  // CONFIGURACIÓN — ajusta antes de publicar
+  // ───────────────────────────────────────────
+  const CONFIG = {
+    // Webhook de n8n (o cualquier endpoint) que recibe el lead y lo añade a Brevo
+    // Ejemplo: 'https://tu-n8n.odontix.click/webhook/demo-lead'
+    webhookUrl: 'PEGAR_URL_WEBHOOK_N8N_AQUI',
+
+    // Credenciales que se muestran al visitante tras registrarse
+    demoEmail: 'demo@odontix.click',
+    demoPass:  'OdontixDemo2026',
+
+    // URL del dashboard demo (relativa o absoluta)
+    dashboardUrl: './index.html',
+  };
+  // ───────────────────────────────────────────
+
+  async function handleSubmit() {
+    const btn = document.getElementById('submitBtn');
+    const errorEl = document.getElementById('formError');
+
+    const nombre   = document.getElementById('nombre').value.trim();
+    const apellido = document.getElementById('apellido').value.trim();
+    const clinica  = document.getElementById('clinica').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    const telefono = document.getElementById('telefono').value.trim();
+
+    // Validación básica
+    if (!nombre || !apellido || !clinica || !email || !telefono) {
+      showError('Por favor completa todos los campos.');
+      return;
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError('Introduce un email válido.');
+      return;
+    }
+
+    // Loading state
+    errorEl.style.display = 'none';
+    btn.disabled = true;
+    btn.innerHTML = '<div class="spinner"></div> Registrando...';
+
+    const payload = { nombre, apellido, clinica, email, telefono, fuente: 'landing-demo', fecha: new Date().toISOString() };
+
+    try {
+      if (CONFIG.webhookUrl && CONFIG.webhookUrl !== 'PEGAR_URL_WEBHOOK_N8N_AQUI') {
+        await fetch(CONFIG.webhookUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
+      }
+      // Mostrar éxito (incluso si el webhook falla, para no bloquear la demo)
+      showSuccess(nombre);
+    } catch (err) {
+      // El webhook falló — mostramos éxito de todas formas (UX)
+      showSuccess(nombre);
+    }
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('formError');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  function showSuccess(nombre) {
+    document.getElementById('formState').style.display = 'none';
+    const s = document.getElementById('successState');
+    s.style.display = 'block';
+    document.getElementById('successName').textContent = nombre;
+    // Actualizar link y credenciales desde config
+    document.querySelector('.btn-access').href = CONFIG.dashboardUrl;
+    document.querySelectorAll('.cred-val')[0].textContent = CONFIG.demoEmail;
+    document.querySelectorAll('.cred-val')[1].textContent = CONFIG.demoPass;
+    document.querySelectorAll('.cred-val')[0].onclick = () => copyToClipboard(CONFIG.demoEmail, document.querySelectorAll('.cred-val')[0]);
+    document.querySelectorAll('.cred-val')[1].onclick = () => copyToClipboard(CONFIG.demoPass, document.querySelectorAll('.cred-val')[1]);
+    s.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  function copyToClipboard(text, el) {
+    navigator.clipboard.writeText(text).then(() => {
+      const original = el.textContent;
+      el.textContent = '✓ Copiado';
+      el.style.background = 'rgba(0,199,96,0.1)';
+      el.style.color = '#00a352';
+      setTimeout(() => {
+        el.textContent = original;
+        el.style.background = '';
+        el.style.color = '';
+      }, 1500);
+    });
+  }
+
+  // Permitir Enter en el form
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Enter' && document.getElementById('formState').style.display !== 'none') {
+      handleSubmit();
+    }
+  });
+</script>
+</body>
+</html>

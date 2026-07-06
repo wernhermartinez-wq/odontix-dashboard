@@ -61,7 +61,7 @@ export default function Sidebar({ currentPage, onNavigate, isOpen, onClose, onSi
   return (
     <aside
       className={`fixed lg:static inset-y-0 left-0 z-30 w-60 flex flex-col transform transition-transform duration-200 ease-in-out ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
-      style={{ background: '#071a1f', borderRight: '1px solid rgba(19,122,140,0.12)' }}
+      style={{ background: 'linear-gradient(175deg, #071a1f 0%, #0a2530 55%, #0d3040 100%)', borderRight: '1px solid rgba(19,122,140,0.15)' }}
     >
       {/* Logo */}
       <div className="flex items-center gap-3 px-4 py-4" style={{ borderBottom: '1px solid rgba(19,122,140,0.12)' }}>

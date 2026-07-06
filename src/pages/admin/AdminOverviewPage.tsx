@@ -7,10 +7,11 @@ interface ResumenRow {
   coste_mensual: number; margen_mensual: number; pago_implementacion: number;
 }
 
-const CARD = { background: '#ffffff', border: '1px solid rgba(0,0,0,0.07)', borderRadius: '0.875rem' };
-const TEXT_MUTED = '#5c5c6b';
-const TEXT_DIM = '#9a9aaa';
-const ROW_HOVER = '#f9fafb';
+const BG = '#0d1018';
+const CARD = { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '0.875rem' };
+const TEXT = 'rgba(240,240,245,0.95)';
+const TEXT_MUTED = 'rgba(240,240,245,0.5)';
+const TEXT_DIM = 'rgba(240,240,245,0.3)';
 
 export default function AdminOverviewPage() {
   const [data, setData] = useState<ResumenRow[]>([]);
@@ -28,16 +29,16 @@ export default function AdminOverviewPage() {
   const totalMargen = data.reduce((s, r) => s + (r.margen_mensual || 0), 0);
 
   const kpis = [
-    { label: 'Clínicas activas', value: data.length, color: '#1a9db5', glow: 'rgba(26,157,181,0.3)' },
-    { label: 'Ingresos / mes',   value: `${totalIngresos}€`, color: '#00E878', glow: 'rgba(0,232,120,0.3)' },
-    { label: 'Costes / mes',     value: `${totalCostes}€`,   color: '#FF3C5A', glow: 'rgba(255,60,90,0.3)' },
-    { label: 'Margen / mes',     value: `${totalMargen}€`,   color: '#3dc0d8', glow: 'rgba(61,192,216,0.3)' },
+    { label: 'Clínicas activas', value: data.length,         color: '#4F9EFF', glow: 'rgba(79,158,255,0.4)' },
+    { label: 'Ingresos / mes',   value: `${totalIngresos}€`, color: '#00E878', glow: 'rgba(0,232,120,0.4)' },
+    { label: 'Costes / mes',     value: `${totalCostes}€`,   color: '#FF3C5A', glow: 'rgba(255,60,90,0.4)' },
+    { label: 'Margen / mes',     value: `${totalMargen}€`,   color: '#FFBB00', glow: 'rgba(255,187,0,0.4)' },
   ];
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-8 max-w-5xl mx-auto" style={{ background: BG, minHeight: '100vh' }}>
       <div className="mb-8">
-        <h1 className="text-2xl font-bold" style={{ color: '#1a1a1f', fontFamily: 'Manrope, system-ui, sans-serif' }}>Visión global</h1>
+        <h1 className="text-2xl font-bold" style={{ color: TEXT, fontFamily: 'Manrope, system-ui, sans-serif' }}>Visión global</h1>
         <p className="text-sm mt-1" style={{ color: TEXT_MUTED }}>Métricas de todas las clínicas activas</p>
       </div>
 
@@ -56,19 +57,20 @@ export default function AdminOverviewPage() {
         <div style={{ ...CARD, overflow: 'hidden' }}>
           <table className="w-full text-sm">
             <thead>
-              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)', background: '#f9fafb' }}>
+              <tr style={{ borderBottom: '1px solid rgba(255,255,255,0.07)', background: 'rgba(255,255,255,0.02)' }}>
                 {['Clínica','Estado','Precio','Margen'].map((h, i) => (
-                  <th key={h} className={`px-5 py-3 text-xs font-semibold uppercase tracking-wide ${i > 1 ? 'text-right' : 'text-left'}`} style={{ color: TEXT_DIM }}>{h}</th>
+                  <th key={h} className={`px-5 py-3 text-xs font-semibold uppercase tracking-wide ${i > 1 ? 'text-right' : 'text-left'}`}
+                    style={{ color: TEXT_DIM }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
               {data.map((row, i) => (
-                <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.05)' }}
-                  onMouseEnter={e => (e.currentTarget.style.background = ROW_HOVER)}
+                <tr key={i} style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}
+                  onMouseEnter={e => (e.currentTarget.style.background = 'rgba(255,255,255,0.03)')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
                   <td className="px-5 py-3.5">
-                    <p className="font-medium" style={{ color: "#1a1a1f" }}>{row.cliente}</p>
+                    <p className="font-medium" style={{ color: TEXT }}>{row.cliente}</p>
                     <p className="text-xs" style={{ color: TEXT_MUTED }}>{row.automatizacion}</p>
                   </td>
                   <td className="px-5 py-3.5">
@@ -80,7 +82,7 @@ export default function AdminOverviewPage() {
                       {row.estado}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-right font-medium text-white">{row.precio_mensual}€</td>
+                  <td className="px-5 py-3.5 text-right font-medium" style={{ color: TEXT }}>{row.precio_mensual}€</td>
                   <td className="px-5 py-3.5 text-right font-medium" style={{ color: '#00E878' }}>{row.margen_mensual}€</td>
                 </tr>
               ))}
