@@ -6,9 +6,9 @@ import odontixLogo from '@/assets/odontixsinfondo.png';
 interface BotStats { totalCitas: number; citasEsteMes: number; citasHoy: number; confirmacionesEnviadas: number; }
 interface BasicPlanPageProps { clinicName?: string; plan: Plan; clienteId?: string | null; onSignOut: () => void; viewingAs?: { id: string; nombre: string } | null; }
 
-const TEXT_MUTED = 'rgba(255,255,255,0.6)';
-const TEXT_DIM = 'rgba(255,255,255,0.35)';
-const CARD = { background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '1rem' };
+const TEXT_MUTED = '#4A5568';
+const TEXT_DIM = '#718096';
+const CARD = { background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '1rem' };
 
 export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, viewingAs }: BasicPlanPageProps) {
   const isBasic = plan === 'basic';
@@ -37,7 +37,7 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
 
   const statItems = stats ? [
     { value: stats.totalCitas, label: 'Citas registradas', neon: '#1a9db5', glow: 'rgba(26,157,181,0.3)' },
-    { value: stats.citasEsteMes, label: 'Citas este mes', neon: '#00E878', glow: 'rgba(0,232,120,0.3)' },
+    { value: stats.citasEsteMes, label: 'Citas este mes', neon: '#38A169', glow: 'rgba(56,161,105,0.3)' },
     { value: stats.citasHoy, label: 'Citas hoy', neon: '#FFBB00', glow: 'rgba(255,187,0,0.3)' },
     { value: stats.confirmacionesEnviadas, label: 'Confirmaciones enviadas', neon: '#3dc0d8', glow: 'rgba(61,192,216,0.3)' },
   ] : null;
@@ -73,8 +73,8 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
         <div style={{ ...CARD, padding: '1.5rem', marginBottom: '1rem' }}>
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-2">
-              <div className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ background: '#00E878', boxShadow: '0 0 8px #00E878' }} />
-              <span className="font-semibold text-sm" style={{ color: '#00E878' }}>Bot WhatsApp activo</span>
+              <div className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ background: '#38A169', boxShadow: '0 0 8px #38A169' }} />
+              <span className="font-semibold text-sm" style={{ color: '#38A169' }}>Bot WhatsApp activo</span>
             </div>
             <span className="text-xs font-semibold px-2.5 py-1 rounded-full uppercase tracking-wide" style={{ background: 'rgba(19,122,140,0.2)', border: '1px solid rgba(19,122,140,0.4)', color: '#1a9db5' }}>Plan Basic</span>
           </div>
@@ -86,16 +86,16 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
           {loadingStats ? (
             <div className="grid grid-cols-2 gap-3">
               {[0,1,2,3].map(i => (
-                <div key={i} className="rounded-xl p-4 animate-pulse" style={{ background: 'rgba(255,255,255,0.04)' }}>
+                <div key={i} className="rounded-xl p-4 animate-pulse" style={{ background: '#FFFFFF' }}>
                   <div className="h-6 rounded w-12 mb-1" style={{ background: 'rgba(255,255,255,0.1)' }} />
-                  <div className="h-3 rounded w-24" style={{ background: 'rgba(255,255,255,0.06)' }} />
+                  <div className="h-3 rounded w-24" style={{ background: '#F7FAFC' }} />
                 </div>
               ))}
             </div>
           ) : statItems ? (
             <div className="grid grid-cols-2 gap-3">
               {statItems.map((s, i) => (
-                <div key={i} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <div key={i} className="rounded-xl p-4" style={{ background: '#FFFFFF', border: '1px solid #E2E8F0' }}>
                   <p className="text-2xl font-bold" style={{ color: s.neon, textShadow: `0 0 16px ${s.glow}` }}>{s.value.toLocaleString()}</p>
                   <p className="text-xs mt-0.5" style={{ color: TEXT_DIM }}>{s.label}</p>
                 </div>
@@ -114,7 +114,7 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
 
         {/* What bot does */}
         <div style={{ ...CARD, padding: '1.25rem', marginBottom: '1rem' }}>
-          <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'rgba(79,158,255,0.6)' }}>Lo que hace el bot por ti</p>
+          <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: 'rgba(26,157,181,0.6)' }}>Lo que hace el bot por ti</p>
           <div className="space-y-2.5">
             {[
               { icon: "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z", label: "Responde pacientes 24/7 por WhatsApp" },
@@ -123,7 +123,7 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
               { icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z", label: "Confirma y cancela sin intervención" },
             ].map((item, i) => (
               <div key={i} className="flex items-center gap-3">
-                <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(79,158,255,0.1)' }}>
+                <div className="w-7 h-7 rounded-lg flex items-center justify-center flex-shrink-0" style={{ background: 'rgba(26,157,181,0.08)' }}>
                   <svg className="w-3.5 h-3.5" style={{ color: '#1a9db5' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={item.icon} />
                   </svg>
@@ -143,7 +143,7 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
             </p>
             <a href="mailto:wernher.martinez@gmail.com?subject=Actualizar a Professional"
               className="block text-center font-semibold text-sm rounded-xl py-2.5 transition-all"
-              style={{ background: '#1a9db5', color: '#0d1018', boxShadow: '0 4px 16px rgba(19,122,140,0.2)' }}>
+              style={{ background: '#1a9db5', color: '#F0F4F8', boxShadow: '0 4px 16px rgba(19,122,140,0.2)' }}>
               Actualizar a Professional — 189€/mes
             </a>
           </div>

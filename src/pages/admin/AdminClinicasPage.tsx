@@ -5,21 +5,21 @@ interface Clinica { id: string; nombre: string; email: string; activo: boolean; 
 interface AdminClinicasPageProps { onVerComo: (clinica: { id: string; nombre: string }) => void; }
 
 const PLANES = ['basic', 'professional', 'premium'];
-const BG = '#0d1018';
-const CARD = { background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)', borderRadius: '0.875rem' };
-const TEXT = 'rgba(240,240,245,0.95)';
-const TEXT_MUTED = 'rgba(240,240,245,0.5)';
-const TEXT_DIM = 'rgba(240,240,245,0.3)';
+const BG   = '#F0F4F8';
+const CARD = { background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '0.875rem', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' };
+const TEXT       = '#1A202C';
+const TEXT_MUTED = '#4A5568';
+const TEXT_DIM   = '#718096';
 
 const planStyle: Record<string, { bg: string; color: string }> = {
-  basic:        { bg: 'rgba(255,255,255,0.06)',   color: 'rgba(240,240,245,0.5)' },
-  professional: { bg: 'rgba(79,158,255,0.15)',    color: '#4F9EFF' },
-  premium:      { bg: 'rgba(167,139,250,0.15)',   color: '#A78BFA' },
+  basic:        { bg: '#EDF2F7',                  color: '#718096' },
+  professional: { bg: 'rgba(26,157,181,0.12)',     color: '#1A7A8E' },
+  premium:      { bg: 'rgba(128,90,213,0.12)',     color: '#553C9A' },
 };
 
 const INPUT_STYLE = {
-  width: '100%', background: 'rgba(255,255,255,0.06)',
-  border: '1px solid rgba(255,255,255,0.1)',
+  width: '100%', background: '#F7FAFC',
+  border: '1px solid #E2E8F0',
   borderRadius: '0.5rem', padding: '0.5rem 0.75rem',
   fontSize: '14px', color: TEXT, outline: 'none',
 };
@@ -79,7 +79,7 @@ export default function AdminClinicasPage({ onVerComo }: AdminClinicasPageProps)
         </div>
         <button onClick={() => setShowModal(true)}
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all"
-          style={{ background: 'linear-gradient(135deg, #4F9EFF, #2563eb)', boxShadow: '0 0 20px rgba(79,158,255,0.3)' }}>
+          style={{ background: 'linear-gradient(135deg, #1A9DB5, #0f7a8e)', boxShadow: '0 2px 8px rgba(26,157,181,0.3)' }}>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
           Nueva clínica
         </button>
@@ -95,8 +95,8 @@ export default function AdminClinicasPage({ onVerComo }: AdminClinicasPageProps)
             return (
               <div key={c.id} style={{ ...CARD, padding: '1.25rem' }} className="flex items-center gap-4">
                 <div className="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0"
-                  style={{ background: 'rgba(79,158,255,0.12)', boxShadow: '0 0 12px rgba(79,158,255,0.2)' }}>
-                  <span className="font-bold text-sm" style={{ color: '#4F9EFF' }}>{c.nombre.charAt(0).toUpperCase()}</span>
+                  style={{ background: 'rgba(26,157,181,0.1)' }}>
+                  <span className="font-bold text-sm" style={{ color: '#1A9DB5' }}>{c.nombre.charAt(0).toUpperCase()}</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-semibold text-sm truncate" style={{ color: TEXT }}>{c.nombre}</p>
@@ -109,9 +109,9 @@ export default function AdminClinicasPage({ onVerComo }: AdminClinicasPageProps)
                 </select>
                 <button onClick={() => onVerComo({ id: c.id, nombre: c.nombre })}
                   className="text-sm font-medium whitespace-nowrap transition-colors"
-                  style={{ color: '#4F9EFF' }}
-                  onMouseEnter={e => (e.currentTarget.style.color = '#93C5FD')}
-                  onMouseLeave={e => (e.currentTarget.style.color = '#4F9EFF')}>
+                  style={{ color: '#1A9DB5' }}
+                  onMouseEnter={e => (e.currentTarget.style.color = '#0f7a8e')}
+                  onMouseLeave={e => (e.currentTarget.style.color = '#1A9DB5')}>
                   Ver como →
                 </button>
               </div>
@@ -120,7 +120,7 @@ export default function AdminClinicasPage({ onVerComo }: AdminClinicasPageProps)
           {clinicas.length === 0 && (
             <div className="text-center py-16" style={{ color: TEXT_DIM }}>
               <p className="text-sm">Sin clínicas registradas</p>
-              <button onClick={() => setShowModal(true)} className="mt-3 text-sm" style={{ color: '#4F9EFF' }}>Crear primera clínica</button>
+              <button onClick={() => setShowModal(true)} className="mt-3 text-sm" style={{ color: '#1A9DB5' }}>Crear primera clínica</button>
             </div>
           )}
         </div>
@@ -128,7 +128,7 @@ export default function AdminClinicasPage({ onVerComo }: AdminClinicasPageProps)
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.7)' }}>
-          <div style={{ background: '#131b26', border: '1px solid rgba(79,158,255,0.2)', borderRadius: '1rem', padding: '1.5rem', width: '100%', maxWidth: '28rem', boxShadow: '0 0 60px rgba(79,158,255,0.1)' }}>
+          <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '1rem', padding: '1.5rem', width: '100%', maxWidth: '28rem', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}>
             <h2 className="text-lg font-bold mb-5" style={{ color: TEXT, fontFamily: 'Manrope, system-ui, sans-serif' }}>Nueva clínica</h2>
             <div className="space-y-4">
               {[
@@ -141,18 +141,18 @@ export default function AdminClinicasPage({ onVerComo }: AdminClinicasPageProps)
                   <input type={f.type} value={(newClinica as any)[f.key]}
                     onChange={(e) => setNewClinica({ ...newClinica, [f.key]: e.target.value })}
                     style={INPUT_STYLE} placeholder={f.placeholder}
-                    onFocus={e => { e.target.style.borderColor = 'rgba(79,158,255,0.5)'; e.target.style.boxShadow = '0 0 0 3px rgba(79,158,255,0.1)'; }}
-                    onBlur={e => { e.target.style.borderColor = 'rgba(255,255,255,0.1)'; e.target.style.boxShadow = 'none'; }} />
+                    onFocus={e => { e.target.style.borderColor = '#1A9DB5'; e.target.style.boxShadow = '0 0 0 3px rgba(26,157,181,0.1)'; }}
+                    onBlur={e => { e.target.style.borderColor = '#E2E8F0'; e.target.style.boxShadow = 'none'; }} />
                 </div>
               ))}
             </div>
             <div className="flex gap-3 mt-6">
               <button onClick={() => setShowModal(false)}
                 className="flex-1 py-2.5 rounded-lg text-sm transition-colors"
-                style={{ border: '1px solid rgba(255,255,255,0.1)', color: TEXT_MUTED, background: 'transparent' }}>Cancelar</button>
+                style={{ border: '1px solid #E2E8F0', color: TEXT_MUTED, background: 'transparent' }}>Cancelar</button>
               <button onClick={crearClinica} disabled={!newClinica.nombre || saving}
                 className="flex-1 py-2.5 rounded-lg text-sm font-medium text-white transition-all disabled:opacity-40"
-                style={{ background: 'linear-gradient(135deg, #4F9EFF, #2563eb)', boxShadow: '0 0 20px rgba(79,158,255,0.3)' }}>
+                style={{ background: 'linear-gradient(135deg, #1A9DB5, #0f7a8e)', boxShadow: '0 2px 8px rgba(26,157,181,0.3)' }}>
                 {saving ? 'Guardando...' : 'Crear clínica'}
               </button>
             </div>

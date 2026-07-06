@@ -19,7 +19,7 @@ import type { AdminPage } from "@/components/AdminSidebar";
 
 export type Page = "dashboard" | "agenda" | "patients" | "absences" | "followups" | "stats" | "settings";
 
-const BG = '#0d1018';
+const BG = '#F0F4F8';
 
 export default function App() {
   const { user, role, clienteId, loading: authLoading, signOut } = useAuth();
@@ -30,25 +30,32 @@ export default function App() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const activeClienteId = viewingAs?.id ?? clienteId;
-  const { plan, loading: planLoading } = usePlan(
-    role === 'clinic' || viewingAs ? activeClienteId : null
-  );
 
-  if (authLoading) {
+  // ── DEV BYPASS ── sólo activo en localhost (import.meta.env.DEV)
+  const DEV_BYPASS = import.meta.env.DEV;
+
+  if (!DEV_BYPASS && authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: BG }}>
         <div className="text-center">
-          <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin mx-auto mb-3" style={{ borderColor: '#4F9EFF', borderTopColor: 'transparent' }} />
+          <div className="w-8 h-8 border-2 border-t-transparent rounded-full animate-spin mx-auto mb-3" style={{ borderColor: '#1A9DB5', borderTopColor: 'transparent' }} />
           <p className="text-sm" style={{ color: 'rgba(240,240,245,0.4)' }}>Cargando...</p>
         </div>
       </div>
     );
   }
 
-  if (!user) return <LoginPage />;
+  if (!DEV_BYPASS && !user) return <LoginPage />;
+
+  // En dev: forzar rol admin si no hay sesión real
+  const effectiveRole = DEV_BYPASS && !user ? 'admin' : role;
+
+  const { plan, loading: planLoading } = usePlan(
+    effectiveRole === 'clinic' || viewingAs ? activeClienteId : null
+  );
 
   // ADMIN PANEL
-  if (role === 'admin' && !viewingAs) {
+  if (effectiveRole === 'admin' && !viewingAs) {
     const renderAdminPage = () => {
       switch (adminPage) {
         case 'overview': return <AdminOverviewPage />;
@@ -88,10 +95,10 @@ export default function App() {
   }
 
   // PLAN LOADING
-  if ((role === 'clinic' || viewingAs) && planLoading) {
+  if ((effectiveRole === 'clinic' || viewingAs) && planLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: BG }}>
-        <div className="w-6 h-6 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#4F9EFF', borderTopColor: 'transparent' }} />
+        <div className="w-6 h-6 border-2 border-t-transparent rounded-full animate-spin" style={{ borderColor: '#1A9DB5', borderTopColor: 'transparent' }} />
       </div>
     );
   }
@@ -100,7 +107,7 @@ export default function App() {
   const effectivePlan = plan ?? 'basic';
 
   if (effectivePlan === 'basic') {
-    if (role === 'clinic' && !viewingAs) {
+    if (effectiveRole === 'clinic' && !viewingAs) {
       return <BasicPlanPage plan={effectivePlan} clienteId={clienteId} onSignOut={signOut} />;
     }
     if (viewingAs) {
@@ -152,23 +159,14 @@ export default function App() {
         onClose={() => setSidebarOpen(false)}
         onSignOut={signOut}
         plan={plan}
-        isAdmin={role === 'admin'}
+        isAdmin={effectiveRole === 'admin'}
         viewingAs={viewingAs}
       />
 
       <div className={`flex-1 flex flex-col min-w-0 overflow-hidden ${viewingAs ? 'pt-8' : ''}`}>
         <div className="lg:hidden flex items-center gap-3 px-4 py-3"
-          style={{ background: BG, borderBottom: '1px solid rgba(79,158,255,0.12)' }}>
+          style={{ background: '#FFFFFF', borderBottom: '1px solid #E2E8F0' }}>
           <button onClick={() => setSidebarOpen(true)} className="p-2 rounded-md"
-            style={{ color: 'rgba(240,240,245,0.6)' }}>
+            style={{ color: '#718096' }}>
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          </button>
-          <span className="font-semibold" style={{ color: 'rgba(240,240,245,0.95)' }}>Odontix</span>
-        </div>
-        <main className="flex-1 overflow-y-auto">{renderPage()}</main>
-      </div>
-    </div>
-  );
-}
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth=

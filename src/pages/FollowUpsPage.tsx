@@ -12,16 +12,16 @@ type FollowUpType = (typeof FOLLOW_UP_TYPES)[number];
 
 const TYPE_STYLE: Record<FollowUpType, { bg: string; color: string }> = {
   "post-tratamiento": { bg: "rgba(19,122,140,0.08)",  color: "#1a9db5" },
-  "ausencia":         { bg: "rgba(255,60,90,0.12)",   color: "#FF3C5A" },
-  "control":          { bg: "rgba(0,232,120,0.12)",   color: "#00E878" },
+  "ausencia":         { bg: "rgba(229,62,62,0.12)",   color: "#E53E3E" },
+  "control":          { bg: "rgba(56,161,105,0.12)",   color: "#38A169" },
   "cumpleaños":       { bg: "rgba(255,187,0,0.12)",   color: "#FFBB00" },
   "reactivación":     { bg: "rgba(61,192,216,0.12)", color: "#3dc0d8" },
 };
 
 const PRIORITY_STYLE: Record<string, { bg: string; color: string }> = {
-  alta:  { bg: "rgba(255,60,90,0.12)",  color: "#FF3C5A" },
+  alta:  { bg: "rgba(229,62,62,0.12)",  color: "#E53E3E" },
   media: { bg: "rgba(255,187,0,0.12)",  color: "#FFBB00" },
-  baja:  { bg: "rgba(0,232,120,0.12)",  color: "#00E878" },
+  baja:  { bg: "rgba(56,161,105,0.12)",  color: "#38A169" },
 };
 
 interface FollowUp {
@@ -83,8 +83,8 @@ export default function FollowUpsPage({ plan }: FollowUpsPageProps = {}) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(150px,1fr))", gap: "1rem" }}>
         {[
           { label: "Pendientes", value: totalPending, color: "#FFBB00" },
-          { label: "Enviados", value: totalSent, color: "#00E878" },
-          { label: "Alta prioridad", value: highPriority, color: "#FF3C5A" },
+          { label: "Enviados", value: totalSent, color: "#38A169" },
+          { label: "Alta prioridad", value: highPriority, color: "#E53E3E" },
           { label: "Total", value: followUps.length, color: "#1a9db5" },
         ].map((k) => (
           <div key={k.label} style={{ ...CARD, padding: "1.125rem" }}>
@@ -96,7 +96,7 @@ export default function FollowUpsPage({ plan }: FollowUpsPageProps = {}) {
 
       {/* Premium AI Campaign */}
       {isPremium && (
-        <div style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.1), rgba(79,158,255,0.08))", border: "1px solid rgba(167,139,250,0.25)", borderRadius: "0.875rem", padding: "1.5rem" }}>
+        <div style={{ background: "linear-gradient(135deg, rgba(167,139,250,0.1), rgba(26,157,181,0.08))", border: "1px solid rgba(167,139,250,0.25)", borderRadius: "0.875rem", padding: "1.5rem" }}>
           <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", flexWrap: "wrap", gap: "1rem" }}>
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem", marginBottom: "0.5rem" }}>
@@ -111,10 +111,10 @@ export default function FollowUpsPage({ plan }: FollowUpsPageProps = {}) {
               onClick={() => { setCampaignSent(true); setTimeout(() => setCampaignSent(false), 4000); }}
               disabled={campaignSent}
               style={{
-                background: campaignSent ? "rgba(0,232,120,0.15)" : "linear-gradient(135deg, #3dc0d8, #0f5e70)",
-                border: campaignSent ? "1px solid rgba(0,232,120,0.3)" : "none",
+                background: campaignSent ? "rgba(56,161,105,0.15)" : "linear-gradient(135deg, #3dc0d8, #0f5e70)",
+                border: campaignSent ? "1px solid rgba(56,161,105,0.3)" : "none",
                 borderRadius: "0.625rem",
-                color: campaignSent ? "#00E878" : "#fff",
+                color: campaignSent ? "#38A169" : "#fff",
                 padding: "0.6rem 1.25rem",
                 fontWeight: 700,
                 fontSize: "0.875rem",
@@ -144,7 +144,7 @@ export default function FollowUpsPage({ plan }: FollowUpsPageProps = {}) {
                 fontWeight: 600,
                 border: "1px solid rgba(0,0,0,0.08)",
                 cursor: "pointer",
-                background: filterType === t ? "rgba(79,158,255,0.18)" : "#f9fafb",
+                background: filterType === t ? "rgba(26,157,181,0.18)" : "#f9fafb",
                 color: filterType === t ? "#1a9db5" : MUTED,
                 transition: "all 0.15s",
                 whiteSpace: "nowrap",
@@ -166,8 +166,8 @@ export default function FollowUpsPage({ plan }: FollowUpsPageProps = {}) {
                 fontWeight: 600,
                 border: "1px solid rgba(0,0,0,0.08)",
                 cursor: "pointer",
-                background: filterSent === v ? "rgba(0,232,120,0.15)" : "#f9fafb",
-                color: filterSent === v ? "#00E878" : MUTED,
+                background: filterSent === v ? "rgba(56,161,105,0.15)" : "#f9fafb",
+                color: filterSent === v ? "#38A169" : MUTED,
                 transition: "all 0.15s",
               }}
             >
@@ -203,7 +203,7 @@ export default function FollowUpsPage({ plan }: FollowUpsPageProps = {}) {
 
               <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
                 {f.sent ? (
-                  <span style={{ background: "rgba(0,232,120,0.1)", color: "#00E878", padding: "0.25rem 0.65rem", borderRadius: "999px", fontSize: "0.75rem", fontWeight: 600 }}>
+                  <span style={{ background: "rgba(56,161,105,0.1)", color: "#38A169", padding: "0.25rem 0.65rem", borderRadius: "999px", fontSize: "0.75rem", fontWeight: 600 }}>
                     ✓ Enviado
                   </span>
                 ) : (
@@ -214,10 +214,10 @@ export default function FollowUpsPage({ plan }: FollowUpsPageProps = {}) {
                 {!f.sent && (
                   <button
                     style={{
-                      background: "rgba(0,232,120,0.12)",
-                      border: "1px solid rgba(0,232,120,0.2)",
+                      background: "rgba(56,161,105,0.12)",
+                      border: "1px solid rgba(56,161,105,0.2)",
                       borderRadius: "0.4rem",
-                      color: "#00E878",
+                      color: "#38A169",
                       padding: "0.3rem 0.75rem",
                       fontSize: "0.78rem",
                       fontWeight: 600,

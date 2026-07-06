@@ -81,8 +81,8 @@ export default function SettingsPage() {
       {/* Toasts */}
       <div style={{ position: "fixed", top: "1rem", right: "1rem", zIndex: 50, display: "flex", flexDirection: "column", gap: "0.5rem" }}>
         {toasts.map((t, i) => (
-          <div key={i} style={{ background: "#ffffff", border: "1px solid rgba(0,232,120,0.25)", color: "#1a1a1f", fontSize: "0.875rem", padding: "0.65rem 1rem", borderRadius: "0.625rem", boxShadow: "0 0 20px rgba(0,0,0,0.4)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
-            <svg width="16" height="16" fill="none" stroke="#00E878" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/></svg>
+          <div key={i} style={{ background: "#ffffff", border: "1px solid rgba(56,161,105,0.25)", color: "#1a1a1f", fontSize: "0.875rem", padding: "0.65rem 1rem", borderRadius: "0.625rem", boxShadow: "0 0 20px rgba(0,0,0,0.4)", display: "flex", alignItems: "center", gap: "0.5rem" }}>
+            <svg width="16" height="16" fill="none" stroke="#38A169" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7"/></svg>
             {t}
           </div>
         ))}
@@ -119,13 +119,13 @@ export default function SettingsPage() {
 
       {/* WhatsApp */}
       <Section title="Integracion WhatsApp">
-        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.75rem", background: "rgba(0,232,120,0.08)", border: "1px solid rgba(0,232,120,0.2)", borderRadius: "0.625rem", marginBottom: "1rem" }}>
-          <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#00E878", boxShadow: "0 0 8px #00E878" }} />
+        <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", padding: "0.75rem", background: "rgba(56,161,105,0.08)", border: "1px solid rgba(56,161,105,0.2)", borderRadius: "0.625rem", marginBottom: "1rem" }}>
+          <div style={{ width: "8px", height: "8px", borderRadius: "50%", background: "#38A169", boxShadow: "0 0 8px #38A169" }} />
           <div style={{ flex: 1 }}>
-            <p style={{ color: "#00E878", fontWeight: 600, fontSize: "0.875rem" }}>Bot activo</p>
+            <p style={{ color: "#38A169", fontWeight: 600, fontSize: "0.875rem" }}>Bot activo</p>
             <p style={{ color: MUTED, fontSize: "0.75rem" }}>+549 11 4000-0000 - Conectado hace 2h</p>
           </div>
-          <button style={{ color: "#FF3C5A", fontSize: "0.75rem", fontWeight: 600, background: "none", border: "none", cursor: "pointer" }}>Desconectar</button>
+          <button style={{ color: "#E53E3E", fontSize: "0.75rem", fontWeight: 600, background: "none", border: "none", cursor: "pointer" }}>Desconectar</button>
         </div>
         <div>
           <Toggle label="Confirmacion automatica de citas" description="Envia WA 24h antes de cada cita" defaultOn />
@@ -144,7 +144,7 @@ export default function SettingsPage() {
         </div>
         <button
           onClick={() => showToast("Configuracion de WhatsApp guardada")}
-          style={{ marginTop: "0.75rem", background: "linear-gradient(135deg, #00C76A, #00925A)", border: "none", borderRadius: "0.625rem", color: "#1a1a1f", padding: "0.55rem 1.1rem", fontWeight: 600, fontSize: "0.875rem", cursor: "pointer", boxShadow: "0 0 16px rgba(0,232,120,0.25)" }}
+          style={{ marginTop: "0.75rem", background: "linear-gradient(135deg, #00C76A, #00925A)", border: "none", borderRadius: "0.625rem", color: "#1a1a1f", padding: "0.55rem 1.1rem", fontWeight: 600, fontSize: "0.875rem", cursor: "pointer", boxShadow: "0 0 16px rgba(56,161,105,0.25)" }}
         >
           Guardar
         </button>
@@ -201,8 +201,8 @@ export default function SettingsPage() {
       </Section>
 
       {/* Danger zone */}
-      <div style={{ background: "rgba(255,60,90,0.06)", border: "1px solid rgba(255,60,90,0.2)", borderRadius: "0.875rem", padding: "1.25rem" }}>
-        <h3 style={{ color: "#FF3C5A", fontWeight: 600, fontSize: "0.9rem", marginBottom: "0.75rem" }}>Zona de peligro</h3>
+      <div style={{ background: "rgba(229,62,62,0.06)", border: "1px solid rgba(229,62,62,0.2)", borderRadius: "0.875rem", padding: "1.25rem" }}>
+        <h3 style={{ color: "#E53E3E", fontWeight: 600, fontSize: "0.9rem", marginBottom: "0.75rem" }}>Zona de peligro</h3>
         <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
           <button style={{ color: "#FF8FA0", fontSize: "0.875rem", fontWeight: 500, background: "none", border: "none", cursor: "pointer", textAlign: "left" }}>Exportar todos los datos (CSV)</button>
           <button style={{ color: "#FF8FA0", fontSize: "0.875rem", fontWeight: 500, background: "none", border: "none", cursor: "pointer", textAlign: "left" }}>Eliminar historial de ausencias</button>

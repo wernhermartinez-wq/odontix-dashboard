@@ -31,7 +31,7 @@ export default function PatientsPage({ plan }: PatientsPageProps = {}) {
 
   const initials = (name: string) => name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
 
-  const avatarColors = ["#1a9db5", "#00E878", "#3dc0d8", "#FFBB00", "#FF3C5A"];
+  const avatarColors = ["#1a9db5", "#38A169", "#3dc0d8", "#FFBB00", "#E53E3E"];
   const avatarColor = (name: string) => avatarColors[name.charCodeAt(0) % avatarColors.length];
 
   return (
@@ -42,7 +42,7 @@ export default function PatientsPage({ plan }: PatientsPageProps = {}) {
           style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}
           onClick={(e) => { if (e.target === e.currentTarget) setSelected(null); }}
         >
-          <div style={{ background: "#ffffff", border: "1px solid rgba(79,158,255,0.25)", borderRadius: "1rem", maxWidth: "32rem", width: "100%", padding: "1.5rem", boxShadow: "0 0 40px rgba(79,158,255,0.1)" }}>
+          <div style={{ background: "#ffffff", border: "1px solid rgba(26,157,181,0.25)", borderRadius: "1rem", maxWidth: "32rem", width: "100%", padding: "1.5rem", boxShadow: "0 0 40px rgba(26,157,181,0.1)" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem" }}>
               <h2 style={{ color: "#1a1a1f", fontWeight: 700, fontSize: "1.1rem" }}>Ficha del Paciente</h2>
               <button
@@ -52,7 +52,7 @@ export default function PatientsPage({ plan }: PatientsPageProps = {}) {
             </div>
 
             <div style={{ display: "flex", alignItems: "center", gap: "1rem", marginBottom: "1.5rem" }}>
-              <div style={{ width: "3.5rem", height: "3.5rem", borderRadius: "50%", background: `rgba(${avatarColor(selected.name) === "#1a9db5" ? "79,158,255" : avatarColor(selected.name) === "#00E878" ? "0,232,120" : avatarColor(selected.name) === "#3dc0d8" ? "167,139,250" : avatarColor(selected.name) === "#FFBB00" ? "255,187,0" : "255,60,90"},0.2)`, border: `2px solid ${avatarColor(selected.name)}`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, color: avatarColor(selected.name), fontSize: "1rem" }}>
+              <div style={{ width: "3.5rem", height: "3.5rem", borderRadius: "50%", background: `rgba(${avatarColor(selected.name) === "#1a9db5" ? "26,157,181" : avatarColor(selected.name) === "#38A169" ? "56,161,105" : avatarColor(selected.name) === "#3dc0d8" ? "167,139,250" : avatarColor(selected.name) === "#FFBB00" ? "255,187,0" : "229,62,62"},0.2)`, border: `2px solid ${avatarColor(selected.name)}`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, color: avatarColor(selected.name), fontSize: "1rem" }}>
                 {initials(selected.name)}
               </div>
               <div>
@@ -76,7 +76,7 @@ export default function PatientsPage({ plan }: PatientsPageProps = {}) {
             </div>
 
             {selected.notes && (
-              <div style={{ background: "rgba(79,158,255,0.06)", border: "1px solid rgba(79,158,255,0.15)", borderRadius: "0.5rem", padding: "0.875rem", marginBottom: "1.25rem" }}>
+              <div style={{ background: "rgba(26,157,181,0.06)", border: "1px solid rgba(26,157,181,0.15)", borderRadius: "0.5rem", padding: "0.875rem", marginBottom: "1.25rem" }}>
                 <p style={{ color: "#1a9db5", fontSize: "0.72rem", fontWeight: 600, textTransform: "uppercase", marginBottom: "0.35rem" }}>Notas</p>
                 <p style={{ color: MUTED, fontSize: "0.875rem" }}>{selected.notes}</p>
               </div>
@@ -153,7 +153,7 @@ export default function PatientsPage({ plan }: PatientsPageProps = {}) {
                     <td style={{ padding: "0.875rem 1rem", color: MUTED, whiteSpace: "nowrap" }}>{p.lastVisit || "—"}</td>
                     <td style={{ padding: "0.875rem 1rem" }}>
                       {p.nextAppointment ? (
-                        <span style={{ background: "rgba(79,158,255,0.1)", color: "#1a9db5", padding: "0.2rem 0.6rem", borderRadius: "999px", fontSize: "0.75rem", fontWeight: 600, whiteSpace: "nowrap" }}>
+                        <span style={{ background: "rgba(26,157,181,0.1)", color: "#1a9db5", padding: "0.2rem 0.6rem", borderRadius: "999px", fontSize: "0.75rem", fontWeight: 600, whiteSpace: "nowrap" }}>
                           {p.nextAppointment}
                         </span>
                       ) : (
@@ -163,7 +163,7 @@ export default function PatientsPage({ plan }: PatientsPageProps = {}) {
                     <td style={{ padding: "0.875rem 1rem" }}>
                       <button
                         onClick={(e) => { e.stopPropagation(); setSelected(p); }}
-                        style={{ background: "rgba(79,158,255,0.1)", border: "1px solid rgba(79,158,255,0.2)", borderRadius: "0.4rem", color: "#1a9db5", padding: "0.25rem 0.6rem", fontSize: "0.75rem", cursor: "pointer", fontWeight: 600 }}
+                        style={{ background: "rgba(26,157,181,0.1)", border: "1px solid rgba(26,157,181,0.2)", borderRadius: "0.4rem", color: "#1a9db5", padding: "0.25rem 0.6rem", fontSize: "0.75rem", cursor: "pointer", fontWeight: 600 }}
                       >
                         Ver
                       </button>

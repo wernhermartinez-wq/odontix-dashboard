@@ -24,7 +24,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex" style={{ background: '#0d1018' }}>
+    <div className="min-h-screen flex" style={{ background: '#F7FAFC' }}>
 
       {/* ── LADO IZQUIERDO ── */}
       <div
@@ -93,61 +93,55 @@ export default function LoginPage() {
       </div>
 
       {/* ── LADO DERECHO: Formulario ── */}
-      <div className="flex-1 flex flex-col items-center justify-center p-8 relative">
-        <div className="absolute inset-0 pointer-events-none lg:hidden" style={{
-          backgroundImage: 'linear-gradient(rgba(79,158,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(79,158,255,0.05) 1px, transparent 1px)',
-          backgroundSize: '64px 64px',
-        }} />
-
-        <div className="w-full max-w-sm relative z-10">
+      <div className="flex-1 flex flex-col items-center justify-center p-8 relative" style={{ background: '#F7FAFC' }}>
+        <div className="w-full max-w-sm">
           {/* Logo móvil */}
           <div className="lg:hidden text-center mb-8">
-            <img src={odontixAgent} alt="Odontix" style={{ height: 120, width: 'auto', margin: '0 auto', filter: 'drop-shadow(0 0 24px rgba(79,158,255,0.5))' }} />
+            <img src={odontixAgent} alt="Odontix" style={{ height: 100, width: 'auto', margin: '0 auto', filter: 'drop-shadow(0 0 16px rgba(26,157,181,0.4))' }} />
           </div>
 
           {/* Card */}
           <div className="rounded-2xl p-8" style={{
-            background: 'rgba(255,255,255,0.04)',
-            border: '1px solid rgba(79,158,255,0.15)',
-            boxShadow: '0 8px 40px rgba(0,0,0,0.4)',
-            backdropFilter: 'blur(12px)',
+            background: '#FFFFFF',
+            border: '1px solid #E2E8F0',
+            boxShadow: '0 4px 24px rgba(0,0,0,0.08)',
           }}>
-            <h2 style={{ fontFamily: 'Manrope, system-ui, sans-serif', fontWeight: 700, fontSize: 22, color: 'rgba(240,240,245,0.95)', margin: '0 0 4px' }}>
+            <h2 style={{ fontFamily: 'Manrope, system-ui, sans-serif', fontWeight: 700, fontSize: 22, color: '#1A202C', margin: '0 0 4px' }}>
               Bienvenido
             </h2>
-            <p style={{ color: 'rgba(240,240,245,0.4)', fontSize: 14, margin: '0 0 28px' }}>
+            <p style={{ color: '#718096', fontSize: 14, margin: '0 0 28px' }}>
               Accede a tu panel de clínica
             </p>
 
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1.5" style={{ color: 'rgba(240,240,245,0.6)' }}>Email</label>
+                <label className="block text-sm font-medium mb-1.5" style={{ color: '#4A5568' }}>Email</label>
                 <input
                   type="email" required value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="clinica@ejemplo.com"
                   className="w-full rounded-lg px-4 py-2.5 text-sm focus:outline-none transition-all"
-                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(240,240,245,0.9)' }}
-                  onFocus={(e) => { e.target.style.borderColor = '#4F9EFF'; e.target.style.boxShadow = '0 0 0 3px rgba(79,158,255,0.15)'; }}
-                  onBlur={(e) => { e.target.style.borderColor = 'rgba(255,255,255,0.1)'; e.target.style.boxShadow = 'none'; }}
+                  style={{ background: '#F7FAFC', border: '1px solid #E2E8F0', color: '#1A202C' }}
+                  onFocus={(e) => { e.target.style.borderColor = '#1A9DB5'; e.target.style.boxShadow = '0 0 0 3px rgba(26,157,181,0.12)'; }}
+                  onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.boxShadow = 'none'; }}
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1.5" style={{ color: 'rgba(240,240,245,0.6)' }}>Contraseña</label>
+                <label className="block text-sm font-medium mb-1.5" style={{ color: '#4A5568' }}>Contraseña</label>
                 <input
                   type="password" required value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
                   className="w-full rounded-lg px-4 py-2.5 text-sm focus:outline-none transition-all"
-                  style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)', color: 'rgba(240,240,245,0.9)' }}
-                  onFocus={(e) => { e.target.style.borderColor = '#4F9EFF'; e.target.style.boxShadow = '0 0 0 3px rgba(79,158,255,0.15)'; }}
-                  onBlur={(e) => { e.target.style.borderColor = 'rgba(255,255,255,0.1)'; e.target.style.boxShadow = 'none'; }}
+                  style={{ background: '#F7FAFC', border: '1px solid #E2E8F0', color: '#1A202C' }}
+                  onFocus={(e) => { e.target.style.borderColor = '#1A9DB5'; e.target.style.boxShadow = '0 0 0 3px rgba(26,157,181,0.12)'; }}
+                  onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.boxShadow = 'none'; }}
                 />
               </div>
 
               {error && (
                 <div className="rounded-lg px-4 py-3 text-sm"
-                  style={{ background: 'rgba(255,60,90,0.1)', border: '1px solid rgba(255,60,90,0.25)', color: '#FF3C5A' }}>
+                  style={{ background: 'rgba(229,62,62,0.06)', border: '1px solid rgba(229,62,62,0.2)', color: '#C53030' }}>
                   {error}
                 </div>
               )}
@@ -155,14 +149,14 @@ export default function LoginPage() {
               <button
                 type="submit" disabled={loading}
                 className="w-full font-semibold rounded-lg py-3 text-sm transition-all disabled:opacity-50"
-                style={{ background: 'linear-gradient(135deg, #4F9EFF 0%, #2563eb 100%)', color: '#fff', boxShadow: '0 4px 20px rgba(79,158,255,0.3)', marginTop: 8 }}
+                style={{ background: 'linear-gradient(135deg, #1A9DB5, #0f7a8e)', color: '#fff', boxShadow: '0 2px 8px rgba(26,157,181,0.3)', marginTop: 8 }}
               >
                 {loading ? 'Accediendo...' : 'Entrar al panel →'}
               </button>
             </form>
           </div>
 
-          <p className="text-center text-xs mt-6" style={{ color: 'rgba(240,240,245,0.2)' }}>
+          <p className="text-center text-xs mt-6" style={{ color: '#A0AEC0' }}>
             Odontix · Gestión de citas por WhatsApp
           </p>
         </div>

@@ -10,18 +10,18 @@ interface Prospecto {
   plan_interes: PlanInteres; notas: string; proxima_accion: string; created_at: string;
 }
 
-const COLUMNAS: { id: Estado; label: string; neon: string; glow: string }[] = [
-  { id: 'frio',       label: 'Frío',       neon: '#7a7a8a', glow: '#f0f2f5' },
-  { id: 'contactado', label: 'Contactado', neon: '#1a9db5',  glow: 'rgba(19,122,140,0.08)' },
-  { id: 'demo',       label: 'Demo',       neon: '#FFBB00',  glow: 'rgba(255,187,0,0.12)' },
-  { id: 'propuesta',  label: 'Propuesta',  neon: '#FF8C00',  glow: 'rgba(255,140,0,0.12)' },
-  { id: 'cerrado',    label: 'Cerrado ✓',  neon: '#00E878',  glow: 'rgba(0,232,120,0.12)' },
+const COLUMNAS: { id: Estado; label: string; color: string; bg: string }[] = [
+  { id: 'frio',       label: 'Frío',       color: '#718096', bg: '#EDF2F7' },
+  { id: 'contactado', label: 'Contactado', color: '#1A9DB5', bg: 'rgba(26,157,181,0.08)' },
+  { id: 'demo',       label: 'Demo',       color: '#D69E2E', bg: 'rgba(214,158,46,0.08)' },
+  { id: 'propuesta',  label: 'Propuesta',  color: '#DD6B20', bg: 'rgba(221,107,32,0.08)' },
+  { id: 'cerrado',    label: 'Cerrado ✓',  color: '#38A169', bg: 'rgba(56,161,105,0.08)' },
 ];
 
 const PLAN_STYLE: Record<PlanInteres, { bg: string; color: string }> = {
-  basic:        { bg: '#f0f2f5', color: 'rgba(240,240,245,0.5)' },
-  professional: { bg: 'rgba(79,158,255,0.14)',  color: '#1a9db5' },
-  premium:      { bg: 'rgba(167,139,250,0.14)', color: '#3dc0d8' },
+  basic:        { bg: '#EDF2F7',                    color: '#718096' },
+  professional: { bg: 'rgba(26,157,181,0.12)',       color: '#1A7A8E' },
+  premium:      { bg: 'rgba(128,90,213,0.12)',       color: '#553C9A' },
 };
 
 const EMPTY_FORM = {
@@ -30,11 +30,11 @@ const EMPTY_FORM = {
   notas: '', proxima_accion: '',
 };
 
-const TEXT_MUTED = '#5c5c6b';
-const TEXT_DIM = '#9a9aaa';
+const TEXT_MUTED = '#4A5568';
+const TEXT_DIM   = '#718096';
 const INPUT_STYLE = {
-  width: '100%', background: '#0d1018', border: '1px solid rgba(0,0,0,0.08)',
-  borderRadius: '0.5rem', padding: '0.5rem 0.75rem', fontSize: '13px', color: 'rgba(240,240,245,0.95)', outline: 'none',
+  width: '100%', background: '#F7FAFC', border: '1px solid #E2E8F0',
+  borderRadius: '0.5rem', padding: '0.5rem 0.75rem', fontSize: '13px', color: '#1A202C', outline: 'none',
 };
 const SELECT_STYLE = { ...INPUT_STYLE, cursor: 'pointer' };
 
@@ -90,18 +90,18 @@ export default function AdminPipelinePage({ onConvertir }: { onConvertir?: (p: P
     s + (p.plan_interes === 'premium' ? 229 : p.plan_interes === 'professional' ? 149 : 89), 0);
 
   return (
-    <div className="p-6 h-full flex flex-col">
+    <div className="p-6 h-full flex flex-col" style={{ background: '#F0F4F8', minHeight: '100vh' }}>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold" style={{ color: 'rgba(240,240,245,0.95)', fontFamily: 'Manrope, system-ui, sans-serif' }}>Pipeline comercial</h1>
+          <h1 className="text-2xl font-bold" style={{ color: '#1A202C', fontFamily: 'Manrope, system-ui, sans-serif' }}>Pipeline comercial</h1>
           <p className="text-sm mt-0.5" style={{ color: TEXT_MUTED }}>
             {prospectos.length} prospectos · {byEstado('propuesta').length} en propuesta ·{' '}
-            <span style={{ color: '#00E878', fontWeight: 600 }}>{totalMRR}€/mes cerrado</span>
+            <span style={{ color: '#38A169', fontWeight: 600 }}>{totalMRR}€/mes cerrado</span>
           </p>
         </div>
         <button onClick={abrirNuevo}
           className="flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium text-white transition-all"
-          style={{ background: 'linear-gradient(135deg, #137a8c, #0f5e70)', boxShadow: '0 0 16px rgba(19,122,140,0.35)' }}>
+          style={{ background: 'linear-gradient(135deg, #1A9DB5, #0f7a8e)', boxShadow: '0 2px 8px rgba(26,157,181,0.3)' }}>
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
           Nuevo prospecto
         </button>
@@ -116,39 +116,39 @@ export default function AdminPipelinePage({ onConvertir }: { onConvertir?: (p: P
               onDragOver={e => e.preventDefault()}
               onDrop={async e => { e.preventDefault(); if (dragging) await cambiarEstado(dragging, col.id); setDragging(null); }}>
               {/* Column header */}
-              <div className="flex items-center gap-2 px-3 py-2.5 rounded-t-xl" style={{ background: col.glow, border: `1px solid ${col.neon}22`, borderBottom: 'none' }}>
-                <span className="w-2 h-2 rounded-full" style={{ background: col.neon, boxShadow: `0 0 6px ${col.neon}` }} />
-                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: col.neon }}>{col.label}</span>
+              <div className="flex items-center gap-2 px-3 py-2.5 rounded-t-xl" style={{ background: col.bg, border: `1px solid #E2E8F0`, borderBottom: 'none' }}>
+                <span className="w-2 h-2 rounded-full" style={{ background: col.color }} />
+                <span className="text-xs font-bold uppercase tracking-wider" style={{ color: col.color }}>{col.label}</span>
                 <span className="ml-auto text-xs font-medium" style={{ color: TEXT_DIM }}>{byEstado(col.id).length}</span>
               </div>
               {/* Column body */}
-              <div className="flex-1 rounded-b-xl p-2 space-y-2 min-h-32" style={{ background: '#f9fafb', border: `1px solid rgba(255,255,255,0.06)`, borderTop: 'none' }}>
+              <div className="flex-1 rounded-b-xl p-2 space-y-2 min-h-32" style={{ background: '#F7FAFC', border: '1px solid #E2E8F0', borderTop: 'none' }}>
                 {byEstado(col.id).map(p => {
                   const ps = PLAN_STYLE[p.plan_interes || 'professional'];
                   return (
                     <div key={p.id} draggable onDragStart={() => setDragging(p.id)} onDragEnd={() => setDragging(null)}
                       className="rounded-xl p-3 cursor-grab active:cursor-grabbing transition-all"
-                      style={{ background: dragging === p.id ? '#f9fafb' : 'rgba(0,0,0,0.06)', border: '1px solid rgba(0,0,0,0.08)', opacity: dragging === p.id ? 0.5 : 1 }}
-                      onMouseEnter={e => (e.currentTarget.style.borderColor = 'rgba(255,255,255,0.14)')}
-                      onMouseLeave={e => (e.currentTarget.style.borderColor = '#f0f2f5')}>
+                      style={{ background: dragging === p.id ? '#F7FAFC' : '#FFFFFF', border: '1px solid #E2E8F0', opacity: dragging === p.id ? 0.5 : 1, boxShadow: '0 1px 2px rgba(0,0,0,0.04)' }}
+                      onMouseEnter={e => (e.currentTarget.style.borderColor = '#CBD5E0')}
+                      onMouseLeave={e => (e.currentTarget.style.borderColor = '#E2E8F0')}>
                       <div className="flex items-start justify-between gap-1 mb-1.5">
-                        <p className="font-semibold text-white text-sm leading-tight">{p.nombre}</p>
+                        <p className="font-semibold text-sm leading-tight" style={{ color: '#1A202C' }}>{p.nombre}</p>
                         <span className="text-[10px] font-semibold px-1.5 py-0.5 rounded flex-shrink-0" style={ps}>
                           {(p.plan_interes || 'professional').charAt(0).toUpperCase() + (p.plan_interes || 'professional').slice(1)}
                         </span>
                       </div>
-                      {p.ciudad && <p className="text-xs mb-1" style={{ color: TEXT_MUTED }}>📍 {p.ciudad}</p>}
+                      {p.ciudad && <p className="text-xs mb-1" style={{ color: TEXT_MUTED }}>{p.ciudad}</p>}
                       {p.contacto && <p className="text-xs truncate" style={{ color: TEXT_MUTED }}>{p.contacto}</p>}
                       {p.proxima_accion && (
-                        <p className="text-xs mt-1.5 font-medium truncate" style={{ color: '#FFBB00' }}>→ {p.proxima_accion}</p>
+                        <p className="text-xs mt-1.5 font-medium truncate" style={{ color: '#D69E2E' }}>→ {p.proxima_accion}</p>
                       )}
-                      <div className="flex items-center gap-1 mt-2 pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-                        <button onClick={() => abrirEditar(p)} className="flex-1 text-xs text-left transition-colors" style={{ color: '#1a9db5' }}>Editar</button>
+                      <div className="flex items-center gap-1 mt-2 pt-2" style={{ borderTop: '1px solid #EDF2F7' }}>
+                        <button onClick={() => abrirEditar(p)} className="flex-1 text-xs text-left transition-colors" style={{ color: '#1A9DB5' }}>Editar</button>
                         {p.estado === 'cerrado' && onConvertir && (
                           <button onClick={() => onConvertir(p)} className="text-xs px-2 py-0.5 rounded font-medium transition-colors"
-                            style={{ background: 'rgba(0,232,120,0.12)', color: '#00E878' }}>Convertir</button>
+                            style={{ background: 'rgba(56,161,105,0.1)', color: '#276749' }}>Convertir</button>
                         )}
-                        <button onClick={() => eliminar(p.id)} className="text-xs transition-colors" style={{ color: '#FF3C5A' }}>✕</button>
+                        <button onClick={() => eliminar(p.id)} className="text-xs transition-colors" style={{ color: '#E53E3E' }}>✕</button>
                       </div>
                     </div>
                   );
@@ -164,15 +164,15 @@ export default function AdminPipelinePage({ onConvertir }: { onConvertir?: (p: P
 
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: 'rgba(0,0,0,0.4)' }}>
-          <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(79,158,255,0.2)', borderRadius: '1rem', padding: '1.5rem', width: '100%', maxWidth: '32rem', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 0 40px rgba(79,158,255,0.1)' }}>
-            <h2 className="text-lg font-bold mb-5" style={{ color: 'rgba(240,240,245,0.95)', fontFamily: 'Manrope, system-ui, sans-serif' }}>
+          <div style={{ background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '1rem', padding: '1.5rem', width: '100%', maxWidth: '32rem', maxHeight: '90vh', overflowY: 'auto', boxShadow: '0 20px 60px rgba(0,0,0,0.15)' }}>
+            <h2 className="text-lg font-bold mb-5" style={{ color: '#1A202C', fontFamily: 'Manrope, system-ui, sans-serif' }}>
               {editando ? 'Editar prospecto' : 'Nuevo prospecto'}
             </h2>
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div className="col-span-2">
                   <label className="block text-xs mb-1" style={{ color: TEXT_MUTED }}>Nombre clínica *</label>
-                  <input value={form.nombre} onChange={e => setForm({...form, nombre: e.target.value})} style={INPUT_STYLE} placeholder="Clínica Dr. García" onFocus={e => (e.target.style.borderColor = 'rgba(79,158,255,0.6)')} onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.08)')} />
+                  <input value={form.nombre} onChange={e => setForm({...form, nombre: e.target.value})} style={INPUT_STYLE} placeholder="Clínica Dr. García" onFocus={e => (e.target.style.borderColor = 'rgba(26,157,181,0.6)')} onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.08)')} />
                 </div>
                 {[
                   { label: 'Contacto', key: 'contacto', placeholder: 'Dr. García' },
@@ -182,7 +182,7 @@ export default function AdminPipelinePage({ onConvertir }: { onConvertir?: (p: P
                 ].map(f => (
                   <div key={f.key}>
                     <label className="block text-xs mb-1" style={{ color: TEXT_MUTED }}>{f.label}</label>
-                    <input value={(form as any)[f.key]} onChange={e => setForm({...form, [f.key]: e.target.value})} style={INPUT_STYLE} placeholder={f.placeholder} onFocus={e => (e.target.style.borderColor = 'rgba(79,158,255,0.6)')} onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.08)')} />
+                    <input value={(form as any)[f.key]} onChange={e => setForm({...form, [f.key]: e.target.value})} style={INPUT_STYLE} placeholder={f.placeholder} onFocus={e => (e.target.style.borderColor = 'rgba(26,157,181,0.6)')} onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.08)')} />
                   </div>
                 ))}
                 <div>
@@ -201,17 +201,17 @@ export default function AdminPipelinePage({ onConvertir }: { onConvertir?: (p: P
                 </div>
                 <div className="col-span-2">
                   <label className="block text-xs mb-1" style={{ color: TEXT_MUTED }}>Próxima acción</label>
-                  <input value={form.proxima_accion} onChange={e => setForm({...form, proxima_accion: e.target.value})} style={INPUT_STYLE} placeholder="Enviar propuesta el viernes" onFocus={e => (e.target.style.borderColor = 'rgba(79,158,255,0.6)')} onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.08)')} />
+                  <input value={form.proxima_accion} onChange={e => setForm({...form, proxima_accion: e.target.value})} style={INPUT_STYLE} placeholder="Enviar propuesta el viernes" onFocus={e => (e.target.style.borderColor = 'rgba(26,157,181,0.6)')} onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.08)')} />
                 </div>
                 <div className="col-span-2">
                   <label className="block text-xs mb-1" style={{ color: TEXT_MUTED }}>Notas</label>
-                  <textarea value={form.notas} onChange={e => setForm({...form, notas: e.target.value})} rows={3} style={{ ...INPUT_STYLE, resize: 'none' }} placeholder="Interesado en automatizar citas..." onFocus={e => (e.target.style.borderColor = 'rgba(79,158,255,0.6)')} onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.08)')} />
+                  <textarea value={form.notas} onChange={e => setForm({...form, notas: e.target.value})} rows={3} style={{ ...INPUT_STYLE, resize: 'none' }} placeholder="Interesado en automatizar citas..." onFocus={e => (e.target.style.borderColor = 'rgba(26,157,181,0.6)')} onBlur={e => (e.target.style.borderColor = 'rgba(0,0,0,0.08)')} />
                 </div>
               </div>
             </div>
             <div className="flex gap-3 mt-5">
-              <button onClick={() => setShowModal(false)} className="flex-1 py-2.5 rounded-lg text-sm transition-colors" style={{ border: '1px solid rgba(0,0,0,0.08)', color: TEXT_MUTED }}>Cancelar</button>
-              <button onClick={guardar} disabled={!form.nombre || saving} className="flex-1 py-2.5 rounded-lg text-sm font-medium text-white disabled:opacity-50 transition-all" style={{ background: 'linear-gradient(135deg, #137a8c, #0f5e70)', boxShadow: '0 0 16px rgba(19,122,140,0.35)' }}>
+              <button onClick={() => setShowModal(false)} className="flex-1 py-2.5 rounded-lg text-sm transition-colors" style={{ border: '1px solid #E2E8F0', color: TEXT_MUTED }}>Cancelar</button>
+              <button onClick={guardar} disabled={!form.nombre || saving} className="flex-1 py-2.5 rounded-lg text-sm font-medium text-white disabled:opacity-50 transition-all" style={{ background: 'linear-gradient(135deg, #1A9DB5, #0f7a8e)', boxShadow: '0 2px 8px rgba(26,157,181,0.3)' }}>
                 {saving ? 'Guardando...' : editando ? 'Guardar cambios' : 'Crear prospecto'}
               </button>
             </div>
@@ -221,3 +221,4 @@ export default function AdminPipelinePage({ onConvertir }: { onConvertir?: (p: P
     </div>
   );
 }
+                                                                             

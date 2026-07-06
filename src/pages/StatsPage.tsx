@@ -124,7 +124,7 @@ export default function StatsPage({ plan }: StatsPageProps = {}) {
                   </div>
                   <div style={{ textAlign: "right" }}>
                     <p style={{ color: "#1a1a1f", fontWeight: 700, fontSize: "0.875rem" }}>{item.value}</p>
-                    <span style={{ background: item.ok ? "rgba(0,232,120,0.12)" : "rgba(255,187,0,0.12)", color: item.ok ? "#00E878" : "#FFBB00", padding: "0.15rem 0.5rem", borderRadius: "999px", fontSize: "0.7rem", fontWeight: 600 }}>
+                    <span style={{ background: item.ok ? "rgba(56,161,105,0.12)" : "rgba(255,187,0,0.12)", color: item.ok ? "#38A169" : "#FFBB00", padding: "0.15rem 0.5rem", borderRadius: "999px", fontSize: "0.7rem", fontWeight: 600 }}>
                       {item.ok ? "Bien" : "Mejorar"}
                     </span>
                   </div>
@@ -168,8 +168,8 @@ export default function StatsPage({ plan }: StatsPageProps = {}) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px,1fr))", gap: "1rem" }}>
         {[
           { label: "Total citas hist.", value: total.toLocaleString(), color: "#1a1a1f" },
-          { label: "Tasa de asistencia", value: `${total > 0 ? Math.round((attended / total) * 100) : 0}%`, color: "#00E878" },
-          { label: "Tasa de ausencia", value: `${total > 0 ? Math.round((absent / total) * 100) : 0}%`, color: "#FF3C5A" },
+          { label: "Tasa de asistencia", value: `${total > 0 ? Math.round((attended / total) * 100) : 0}%`, color: "#38A169" },
+          { label: "Tasa de ausencia", value: `${total > 0 ? Math.round((absent / total) * 100) : 0}%`, color: "#E53E3E" },
           { label: "Ingresos est. 6M", value: `$${(totalRevenue / 1000).toFixed(0)}K`, color: "#1a9db5" },
         ].map((k) => (
           <div key={k.label} style={{ ...CARD, padding: "1.125rem" }}>
@@ -192,7 +192,7 @@ export default function StatsPage({ plan }: StatsPageProps = {}) {
             data={monthly.map((m) => ({ month: m.month, revenue: Math.round(m.revenue / 1000) }))}
             valueKey="revenue"
             labelKey="month"
-            color="#00E878"
+            color="#38A169"
             height={160}
           />
           <p style={{ fontSize: "0.65rem", color: DIM, marginTop: "0.25rem", textAlign: "right" }}>en miles $</p>
@@ -203,8 +203,8 @@ export default function StatsPage({ plan }: StatsPageProps = {}) {
       <div style={{ ...CARD, padding: "1.5rem" }}>
         <h3 style={{ color: "#1a1a1f", fontWeight: 600, fontSize: "0.9rem", marginBottom: "1.5rem" }}>Indicadores de desempeño</h3>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(120px,1fr))", gap: "1.5rem" }}>
-          <DonutChart value={attended} total={total} color="#00E878" label="Asistencia" />
-          <DonutChart value={absent} total={total} color="#FF3C5A" label="Ausentismo" />
+          <DonutChart value={attended} total={total} color="#38A169" label="Asistencia" />
+          <DonutChart value={absent} total={total} color="#E53E3E" label="Ausentismo" />
           <DonutChart value={confirmed} total={total} color="#1a9db5" label="Confirmación WA" />
           <DonutChart value={attended} total={attended + cancelled} color="#3dc0d8" label="Conversión" />
         </div>
@@ -220,8 +220,8 @@ export default function StatsPage({ plan }: StatsPageProps = {}) {
           <h3 style={{ color: "#1a1a1f", fontWeight: 600, fontSize: "0.9rem", marginBottom: "1rem" }}>Ocupación de agenda</h3>
           <div style={{ display: "flex", flexDirection: "column", gap: "0.875rem" }}>
             {[
-              { label: "Atendidos", value: attended, total, color: "#00E878" },
-              { label: "Ausentes", value: absent, total, color: "#FF3C5A" },
+              { label: "Atendidos", value: attended, total, color: "#38A169" },
+              { label: "Ausentes", value: absent, total, color: "#E53E3E" },
               { label: "Cancelados", value: cancelled, total, color: "#FFBB00" },
               { label: "Agendados", value: scheduled, total, color: "#1a9db5" },
             ].map((item) => (
@@ -244,7 +244,7 @@ export default function StatsPage({ plan }: StatsPageProps = {}) {
               <p style={{ color: MUTED, fontSize: "0.75rem" }}>Pacientes activos</p>
             </div>
             <div style={{ textAlign: "center" }}>
-              <p style={{ fontSize: "1.75rem", fontWeight: 700, color: "#00E878", textShadow: "0 0 12px #00E87855" }}>{absences.filter(a => a.rescheduled).length}</p>
+              <p style={{ fontSize: "1.75rem", fontWeight: 700, color: "#38A169", textShadow: "0 0 12px #38A16955" }}>{absences.filter(a => a.rescheduled).length}</p>
               <p style={{ color: MUTED, fontSize: "0.75rem" }}>Ausencias recuperadas</p>
             </div>
           </div>
@@ -277,14 +277,14 @@ export default function StatsPage({ plan }: StatsPageProps = {}) {
                   >
                     <td style={{ padding: "0.875rem 1rem", color: "#1a1a1f", fontWeight: 500 }}>{m.month}</td>
                     <td style={{ padding: "0.875rem 1rem", color: MUTED }}>{m.total}</td>
-                    <td style={{ padding: "0.875rem 1rem", color: "#00E878", fontWeight: 600 }}>{m.attended}</td>
-                    <td style={{ padding: "0.875rem 1rem", color: "#FF3C5A" }}>{m.absent}</td>
+                    <td style={{ padding: "0.875rem 1rem", color: "#38A169", fontWeight: 600 }}>{m.attended}</td>
+                    <td style={{ padding: "0.875rem 1rem", color: "#E53E3E" }}>{m.absent}</td>
                     <td style={{ padding: "0.875rem 1rem", color: MUTED }}>{m.cancelled}</td>
                     <td style={{ padding: "0.875rem 1rem", color: "#1a9db5" }}>${m.revenue.toLocaleString()}</td>
                     <td style={{ padding: "0.875rem 1rem" }}>
                       <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                         <div style={{ flex: 1, height: "4px", background: "#f0f2f5", borderRadius: "999px", overflow: "hidden", minWidth: "4rem" }}>
-                          <div style={{ height: "100%", width: `${rate}%`, background: rate >= 80 ? "#00E878" : rate >= 60 ? "#FFBB00" : "#FF3C5A", borderRadius: "999px" }} />
+                          <div style={{ height: "100%", width: `${rate}%`, background: rate >= 80 ? "#38A169" : rate >= 60 ? "#FFBB00" : "#E53E3E", borderRadius: "999px" }} />
                         </div>
                         <span style={{ color: "#1a1a1f", fontSize: "0.78rem", fontWeight: 600, whiteSpace: "nowrap" }}>{rate}%</span>
                       </div>

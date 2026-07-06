@@ -10,8 +10,8 @@
 
 body {
   margin: 0;
-  background-color: #0d1018;
-  color: rgba(240,240,245,0.95);
+  background-color: #F0F4F8;
+  color: #1A202C;
   font-size: 14px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
@@ -22,8 +22,8 @@ body {
 
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(79,158,255,0.25); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(79,158,255,0.5); }
+::-webkit-scrollbar-thumb { background: rgba(26,157,181,0.3); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(26,157,181,0.6); }
 
 h1, h2, h3, .font-display {
   font-family: 'Manrope', system-ui, sans-serif;
@@ -31,25 +31,25 @@ h1, h2, h3, .font-display {
 }
 
 :root {
-  /* ── Odontix Design System v3.0 — Dark Neon ── */
-  --background:          222 25% 7%;
-  --foreground:          220 20% 95%;
-  --card:                222 20% 10%;
-  --card-foreground:     220 20% 95%;
-  --popover:             222 20% 10%;
-  --popover-foreground:  220 20% 95%;
-  --primary:             213 100% 65%;
-  --primary-foreground:  222 25% 7%;
-  --secondary:           222 20% 14%;
-  --secondary-foreground: 220 20% 80%;
-  --muted:               222 20% 14%;
-  --muted-foreground:    220 10% 55%;
-  --accent:              213 100% 65%;
-  --accent-foreground:   222 25% 7%;
-  --destructive:         350 100% 60%;
+  /* ── Odontix Design System v4.0 — Clinical Light ── */
+  --background:          210 25% 96%;
+  --foreground:          220 26% 14%;
+  --card:                0 0% 100%;
+  --card-foreground:     220 26% 14%;
+  --popover:             0 0% 100%;
+  --popover-foreground:  220 26% 14%;
+  --primary:             189 75% 41%;
+  --primary-foreground:  0 0% 100%;
+  --secondary:           210 20% 94%;
+  --secondary-foreground: 220 15% 40%;
+  --muted:               210 20% 94%;
+  --muted-foreground:    220 10% 46%;
+  --accent:              189 75% 41%;
+  --accent-foreground:   0 0% 100%;
+  --destructive:         0 72% 51%;
   --destructive-foreground: 0 0% 100%;
-  --border:              222 20% 18%;
-  --input:               222 20% 14%;
-  --ring:                213 100% 65%;
+  --border:              214 32% 91%;
+  --input:               214 32% 91%;
+  --ring:                189 75% 41%;
   --radius: 0.875rem;
 }

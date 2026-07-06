@@ -9,8 +9,8 @@ const BORDER = "rgba(0,0,0,0.07)";
 
 const STATUS_STYLE: Record<string, { bg: string; color: string; label: string }> = {
   scheduled:  { bg: "rgba(19,122,140,0.08)",  color: "#1a9db5",  label: "Agendada" },
-  attended:   { bg: "rgba(0,232,120,0.12)",   color: "#00E878",  label: "Atendida" },
-  absent:     { bg: "rgba(255,60,90,0.12)",   color: "#FF3C5A",  label: "Ausente" },
+  attended:   { bg: "rgba(56,161,105,0.12)",   color: "#38A169",  label: "Atendida" },
+  absent:     { bg: "rgba(229,62,62,0.12)",   color: "#E53E3E",  label: "Ausente" },
   cancelled:  { bg: "rgba(255,187,0,0.12)",   color: "#FFBB00",  label: "Cancelada" },
 };
 
@@ -65,7 +65,7 @@ export default function AgendaPage({ plan }: AgendaPageProps = {}) {
                 border: "1px solid rgba(0,0,0,0.08)",
                 cursor: "pointer",
                 transition: "all 0.15s",
-                background: view === v ? "rgba(79,158,255,0.18)" : "#f9fafb",
+                background: view === v ? "rgba(26,157,181,0.18)" : "#f9fafb",
                 color: view === v ? "#1a9db5" : MUTED,
               }}
             >
@@ -79,7 +79,7 @@ export default function AgendaPage({ plan }: AgendaPageProps = {}) {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px,1fr))", gap: "1rem" }}>
         {[
           { label: "Hoy", value: todayAppts.length, color: "#1a9db5" },
-          { label: "Próximas", value: upcomingAppts.length, color: "#00E878" },
+          { label: "Próximas", value: upcomingAppts.length, color: "#38A169" },
           { label: "Total", value: appointments.length, color: "#3dc0d8" },
           { label: "Pendientes", value: appointments.filter(a => a.status === "scheduled").length, color: "#FFBB00" },
         ].map((s) => (
@@ -148,10 +148,10 @@ export default function AgendaPage({ plan }: AgendaPageProps = {}) {
               <button
                 onClick={() => { setSearch(""); setFilterStatus("all"); setFilterDate(""); }}
                 style={{
-                  background: "rgba(255,60,90,0.1)",
-                  border: "1px solid rgba(255,60,90,0.2)",
+                  background: "rgba(229,62,62,0.1)",
+                  border: "1px solid rgba(229,62,62,0.2)",
                   borderRadius: "0.5rem",
-                  color: "#FF3C5A",
+                  color: "#E53E3E",
                   padding: "0.45rem 0.75rem",
                   fontSize: "0.8rem",
                   cursor: "pointer",
@@ -203,7 +203,7 @@ export default function AgendaPage({ plan }: AgendaPageProps = {}) {
                         </td>
                         <td style={{ padding: "0.875rem 1rem" }}>
                           {a.confirmedByWhatsApp ? (
-                            <span style={{ color: "#00E878", fontSize: "0.75rem", fontWeight: 600 }}>✓ Sí</span>
+                            <span style={{ color: "#38A169", fontSize: "0.75rem", fontWeight: 600 }}>✓ Sí</span>
                           ) : (
                             <span style={{ color: DIM, fontSize: "0.75rem" }}>—</span>
                           )}
@@ -254,7 +254,7 @@ export default function AgendaPage({ plan }: AgendaPageProps = {}) {
                   key={day}
                   style={{
                     background: isToday ? "rgba(19,122,140,0.08)" : dayAppts.length > 0 ? "#f9fafb" : "transparent",
-                    border: isToday ? "1px solid rgba(79,158,255,0.4)" : `1px solid ${BORDER}`,
+                    border: isToday ? "1px solid rgba(26,157,181,0.4)" : `1px solid ${BORDER}`,
                     borderRadius: "0.5rem",
                     padding: "0.35rem",
                     minHeight: "3.5rem",

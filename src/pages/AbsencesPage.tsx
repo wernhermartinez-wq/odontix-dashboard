@@ -34,8 +34,8 @@ export default function AbsencesPage({ plan }: AbsencesPageProps = {}) {
       {/* KPI cards */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px,1fr))", gap: "1rem" }}>
         {[
-          { label: "Total ausencias", value: total, color: "#FF3C5A", icon: "⚠" },
-          { label: "Reagendadas", value: rescheduled, color: "#00E878", icon: "✓" },
+          { label: "Total ausencias", value: total, color: "#E53E3E", icon: "⚠" },
+          { label: "Reagendadas", value: rescheduled, color: "#38A169", icon: "✓" },
           { label: "Pendientes", value: pending, color: "#FFBB00", icon: "⏳" },
           { label: "Tasa recuperación", value: `${recoveryRate}%`, color: "#3dc0d8", icon: "📈" },
         ].map((k) => (
@@ -78,7 +78,7 @@ export default function AbsencesPage({ plan }: AbsencesPageProps = {}) {
               border: "1px solid rgba(0,0,0,0.08)",
               cursor: "pointer",
               transition: "all 0.15s",
-              background: filter === v ? "rgba(79,158,255,0.18)" : "#f9fafb",
+              background: filter === v ? "rgba(26,157,181,0.18)" : "#f9fafb",
               color: filter === v ? "#1a9db5" : MUTED,
             }}
           >
@@ -126,9 +126,9 @@ export default function AbsencesPage({ plan }: AbsencesPageProps = {}) {
                   </td>
                   <td style={{ padding: "0.875rem 1rem" }}>
                     {a.rescheduled ? (
-                      <span style={{ background: "rgba(0,232,120,0.12)", color: "#00E878", padding: "0.2rem 0.6rem", borderRadius: "999px", fontSize: "0.75rem", fontWeight: 600 }}>✓ Sí</span>
+                      <span style={{ background: "rgba(56,161,105,0.12)", color: "#38A169", padding: "0.2rem 0.6rem", borderRadius: "999px", fontSize: "0.75rem", fontWeight: 600 }}>✓ Sí</span>
                     ) : (
-                      <span style={{ background: "rgba(255,60,90,0.12)", color: "#FF3C5A", padding: "0.2rem 0.6rem", borderRadius: "999px", fontSize: "0.75rem", fontWeight: 600 }}>Pendiente</span>
+                      <span style={{ background: "rgba(229,62,62,0.12)", color: "#E53E3E", padding: "0.2rem 0.6rem", borderRadius: "999px", fontSize: "0.75rem", fontWeight: 600 }}>Pendiente</span>
                     )}
                   </td>
                 </tr>
