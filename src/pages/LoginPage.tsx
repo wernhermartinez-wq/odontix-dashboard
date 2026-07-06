@@ -28,7 +28,7 @@ export default function LoginPage() {
 
       {/* ── LADO IZQUIERDO ── */}
       <div
-        className="hidden lg:flex flex-col justify-end p-12 relative overflow-hidden"
+        className="hidden lg:flex flex-col justify-center p-12 pt-8 relative overflow-hidden"
         style={{ flex: '0 0 55%', background: 'linear-gradient(155deg, #071a1f 0%, #0a2530 60%, #0d3040 100%)' }}
       >
         {/* Grid */}
