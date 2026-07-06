@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
-import odontixLogo from '@/assets/odontixsinfondo.png';
 import odontixAgent from '@/assets/odontixagent2.png';
 
 const features = [
@@ -44,20 +43,12 @@ export default function LoginPage() {
           top: '5%', left: '-15%',
         }} />
 
-        {/* Logo */}
+        {/* Logo — Odontix Agent */}
         <div className="relative z-10 flex items-center gap-3">
-          <img src={odontixLogo} alt="Odontix" style={{ height: 40, width: 'auto' }} />
-        </div>
-
-        {/* Hero agent image */}
-        <div className="relative z-10 flex justify-center">
           <img
             src={odontixAgent}
             alt="Odontix Agent"
-            style={{
-              height: 200, width: 'auto',
-              filter: 'drop-shadow(0 0 40px rgba(79,158,255,0.5))',
-            }}
+            style={{ height: 52, width: 'auto', filter: 'drop-shadow(0 0 16px rgba(79,158,255,0.5))' }}
           />
         </div>
 
