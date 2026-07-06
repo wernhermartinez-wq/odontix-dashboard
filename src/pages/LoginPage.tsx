@@ -28,7 +28,7 @@ export default function LoginPage() {
 
       {/* ── LADO IZQUIERDO ── */}
       <div
-        className="hidden lg:flex flex-col justify-between p-12 relative overflow-hidden"
+        className="hidden lg:flex flex-col justify-end p-12 relative overflow-hidden"
         style={{ flex: '0 0 55%', background: 'linear-gradient(155deg, #071a1f 0%, #0a2530 60%, #0d3040 100%)' }}
       >
         {/* Grid */}
@@ -43,17 +43,15 @@ export default function LoginPage() {
           top: '5%', left: '-15%',
         }} />
 
-        {/* Logo — Odontix Agent */}
-        <div className="relative z-10 flex items-center gap-3">
+        {/* Contenido principal */}
+        <div className="relative z-10">
+          {/* Agent logo grande, alineado con el texto */}
           <img
             src={odontixAgent}
             alt="Odontix Agent"
-            style={{ height: 52, width: 'auto', filter: 'drop-shadow(0 0 16px rgba(79,158,255,0.5))' }}
+            style={{ height: 180, width: 'auto', marginBottom: 28, filter: 'drop-shadow(0 0 32px rgba(79,158,255,0.55))' }}
           />
-        </div>
 
-        {/* Texto */}
-        <div className="relative z-10">
           <div className="inline-flex items-center gap-2 rounded-full px-3 py-1 mb-5 text-xs font-medium"
             style={{ background: 'rgba(79,158,255,0.1)', border: '1px solid rgba(79,158,255,0.25)', color: '#4F9EFF' }}>
             🦷 Panel de gestión para clínicas
@@ -65,7 +63,7 @@ export default function LoginPage() {
           <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: 15, lineHeight: 1.7, marginBottom: 32, maxWidth: 400 }}>
             Automatiza citas, recordatorios y cancelaciones por WhatsApp.
           </p>
-          <div className="flex flex-col gap-4">
+          <div className="flex flex-col gap-4 mb-8">
             {features.map((f, i) => (
               <div key={i} className="flex items-start gap-3">
                 <div className="flex-shrink-0 flex items-center justify-center rounded-xl"
@@ -81,16 +79,16 @@ export default function LoginPage() {
               </div>
             ))}
           </div>
-        </div>
 
-        {/* Stats footer */}
-        <div className="relative z-10 flex gap-8 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
-          {[['+200', 'clínicas activas'], ['98%', 'tasa confirmación'], ['4.9★', 'valoración']].map(([val, label]) => (
-            <div key={label}>
-              <p style={{ color: '#ffffff', fontWeight: 700, fontSize: 20, margin: 0 }}>{val}</p>
-              <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, margin: 0 }}>{label}</p>
-            </div>
-          ))}
+          {/* Stats footer */}
+          <div className="flex gap-8 pt-6" style={{ borderTop: '1px solid rgba(255,255,255,0.07)' }}>
+            {[['+200', 'clínicas activas'], ['98%', 'tasa confirmación'], ['4.9★', 'valoración']].map(([val, label]) => (
+              <div key={label}>
+                <p style={{ color: '#ffffff', fontWeight: 700, fontSize: 20, margin: 0 }}>{val}</p>
+                <p style={{ color: 'rgba(255,255,255,0.35)', fontSize: 11, margin: 0 }}>{label}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
