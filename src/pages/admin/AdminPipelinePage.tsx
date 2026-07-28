@@ -221,4 +221,3 @@ export default function AdminPipelinePage({ onConvertir }: { onConvertir?: (p: P
     </div>
   );
 }
-                                                                             
