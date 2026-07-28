@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { clearNexaroToken } from '@/lib/nexaro';
 import type { User } from '@supabase/supabase-js';
 
 export type AuthRole = 'admin' | 'clinic' | null;
@@ -29,11 +30,16 @@ export function useAuth(): AuthState {
     return () => subscription.unsubscribe();
   }, []);
 
-  const role: AuthRole = (user?.user_metadata?.role as AuthRole) ?? null;
-  const clienteId: string | null = user?.user_metadata?.cliente_id ?? null;
+  // SEGURIDAD: leer role desde app_metadata (solo editable server-side via service role key)
+  // NO usar user_metadata — cualquier usuario autenticado puede editarlo con supabase.auth.updateUser()
+  // Para asignar roles: usar Supabase Dashboard → Authentication → Users → editar app_metadata
+  // o llamar a supabase.auth.admin.updateUserById() desde un backend con service role key
+  const role: AuthRole = (user?.app_metadata?.role as AuthRole) ?? null;
+  const clienteId: string | null = user?.app_metadata?.cliente_id ?? null;
 
   const signOut = async () => {
     await supabase.auth.signOut();
+    clearNexaroToken();
   };
 
   return { user, role, clienteId, loading, signOut };

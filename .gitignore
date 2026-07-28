@@ -12,9 +12,10 @@ dist
 dist-ssr
 *.local
 
-# Variables de entorno — NUNCA a git
+# Variables de entorno — NUNCA a git (excepto la plantilla de ejemplo)
 .env
 .env.*
+!.env.local.example
 
 # Editor directories and files
 .vscode/*
