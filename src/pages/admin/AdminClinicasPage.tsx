@@ -60,7 +60,7 @@ export default function AdminClinicasPage({ onVerComo }: AdminClinicasPageProps)
 
   async function crearClinica() {
     setSaving(true);
-    const { data } = await supabase.from('clientes').insert({ nombre: newClinica.nombre, email: newClinica.email, telefono: newClinica.telefono, activo: true }).select('id').single();
+    const { data } = await supabase.from('clientes').insert({ nombre: newClinica.nombre, email: newClinica.email, telefono_principal: newClinica.telefono, activo: true }).select('id').single();
     if (data) {
       await supabase.from('odontix_config').insert({ cliente_id: data.id, plan: 'basic', horario_apertura: '09:00', horario_cierre: '18:00', dias_atencion: [1,2,3,4,5], whatsapp_activo: true });
       await cargarClinicas();

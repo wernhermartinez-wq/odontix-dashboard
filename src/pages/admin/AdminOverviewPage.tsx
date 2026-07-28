@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
 
-interface ResumenRow {
-  cliente: string; automatizacion: string; estado: string;
-  progreso_porcentaje: number; precio_mensual: number;
-  coste_mensual: number; margen_mensual: number; pago_implementacion: number;
+interface ClienteRow {
+  id: string;
+  nombre: string;
+  activo: boolean;
+  tipo_negocio: string | null;
+  plan: string | null;
 }
+
+// Precio de catálogo por plan (mismos valores que AdminPipelinePage/BasicPlanPage).
+// No hay tabla de costes/ingresos reales en el esquema actual de Agentix —
+// "Costes" y "Margen" no se muestran para no fabricar cifras sin fuente de datos.
+const PRECIO_PLAN: Record<string, number> = { basic: 109, professional: 189, premium: 279 };
 
 const BG   = '#F0F4F8';
 const CARD = { background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '0.875rem', boxShadow: '0 1px 3px rgba(0,0,0,0.06)' };
@@ -14,25 +21,29 @@ const TEXT_MUTED = '#4A5568';
 const TEXT_DIM   = '#718096';
 
 export default function AdminOverviewPage() {
-  const [data, setData] = useState<ResumenRow[]>([]);
+  const [clinicas, setClinicas] = useState<ClienteRow[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    supabase.from('agentix_dashboard_resumen').select('*').then(({ data }) => {
-      setData(data || []);
+    (async () => {
+      const { data: clientes } = await supabase.from('clientes').select('id, nombre, activo, tipo_negocio').order('nombre');
+      const { data: configs } = await supabase.from('odontix_config').select('cliente_id, plan');
+
+      const planPorCliente: Record<string, string> = {};
+      (configs || []).forEach((c: any) => { planPorCliente[c.cliente_id] = c.plan; });
+
+      setClinicas((clientes || []).map((c: any) => ({ ...c, plan: planPorCliente[c.id] ?? null })));
       setLoading(false);
-    });
+    })();
   }, []);
 
-  const totalIngresos = data.reduce((s, r) => s + (r.precio_mensual || 0), 0);
-  const totalCostes   = data.reduce((s, r) => s + (r.coste_mensual || 0), 0);
-  const totalMargen   = data.reduce((s, r) => s + (r.margen_mensual || 0), 0);
+  const activas = clinicas.filter(c => c.activo);
+  const ingresosMensuales = activas.reduce((s, c) => s + (c.plan ? PRECIO_PLAN[c.plan] ?? 0 : 0), 0);
 
   const kpis = [
-    { label: 'Clínicas activas', value: data.length,          color: '#1A9DB5', bg: 'rgba(26,157,181,0.08)'  },
-    { label: 'Ingresos / mes',   value: `${totalIngresos}€`,  color: '#38A169', bg: 'rgba(56,161,105,0.08)'  },
-    { label: 'Costes / mes',     value: `${totalCostes}€`,    color: '#E53E3E', bg: 'rgba(229,62,62,0.08)'   },
-    { label: 'Margen / mes',     value: `${totalMargen}€`,    color: '#D69E2E', bg: 'rgba(214,158,46,0.08)'  },
+    { label: 'Clínicas activas', value: activas.length,           color: '#1A9DB5', bg: 'rgba(26,157,181,0.08)' },
+    { label: 'Ingresos / mes',   value: `${ingresosMensuales}€`,   color: '#38A169', bg: 'rgba(56,161,105,0.08)' },
+    { label: 'Total clínicas',   value: clinicas.length,           color: '#718096', bg: 'rgba(113,128,150,0.08)' },
   ];
 
   return (
@@ -42,7 +53,7 @@ export default function AdminOverviewPage() {
         <p className="text-sm mt-1" style={{ color: TEXT_MUTED }}>Métricas de todas las clínicas activas</p>
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         {kpis.map((k) => (
           <div key={k.label} style={{ ...CARD, padding: '1.25rem' }}>
             <div className="w-8 h-8 rounded-lg mb-3 flex items-center justify-center" style={{ background: k.bg }}>
@@ -64,36 +75,38 @@ export default function AdminOverviewPage() {
           <table className="w-full text-sm">
             <thead>
               <tr style={{ background: '#F7FAFC' }}>
-                {['Clínica','Estado','Precio / mes','Margen'].map((h, i) => (
+                {['Clínica', 'Estado', 'Plan', 'Precio / mes'].map((h, i) => (
                   <th key={h} className={`px-5 py-3 text-xs font-semibold uppercase tracking-wide ${i > 1 ? 'text-right' : 'text-left'}`}
                     style={{ color: TEXT_DIM }}>{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              {data.map((row, i) => (
-                <tr key={i} style={{ borderTop: '1px solid #EDF2F7' }}
+              {clinicas.map((c) => (
+                <tr key={c.id} style={{ borderTop: '1px solid #EDF2F7' }}
                   onMouseEnter={e => (e.currentTarget.style.background = '#F7FAFC')}
                   onMouseLeave={e => (e.currentTarget.style.background = 'transparent')}>
                   <td className="px-5 py-3.5">
-                    <p className="font-medium" style={{ color: TEXT }}>{row.cliente}</p>
-                    <p className="text-xs mt-0.5" style={{ color: TEXT_DIM }}>{row.automatizacion}</p>
+                    <p className="font-medium" style={{ color: TEXT }}>{c.nombre}</p>
+                    <p className="text-xs mt-0.5" style={{ color: TEXT_DIM }}>{c.tipo_negocio || '—'}</p>
                   </td>
                   <td className="px-5 py-3.5">
                     <span className="inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1 rounded-full"
-                      style={row.estado === 'activo'
+                      style={c.activo
                         ? { background: 'rgba(56,161,105,0.1)', color: '#276749' }
                         : { background: 'rgba(214,158,46,0.1)', color: '#975A16' }}>
                       <span className="w-1.5 h-1.5 rounded-full"
-                        style={{ background: row.estado === 'activo' ? '#38A169' : '#D69E2E' }} />
-                      {row.estado}
+                        style={{ background: c.activo ? '#38A169' : '#D69E2E' }} />
+                      {c.activo ? 'activo' : 'inactivo'}
                     </span>
                   </td>
-                  <td className="px-5 py-3.5 text-right font-semibold" style={{ color: TEXT }}>{row.precio_mensual}€</td>
-                  <td className="px-5 py-3.5 text-right font-semibold" style={{ color: '#38A169' }}>{row.margen_mensual}€</td>
+                  <td className="px-5 py-3.5 text-right" style={{ color: TEXT_MUTED }}>{c.plan ?? 'sin plan'}</td>
+                  <td className="px-5 py-3.5 text-right font-semibold" style={{ color: TEXT }}>
+                    {c.plan ? `${PRECIO_PLAN[c.plan] ?? 0}€` : '—'}
+                  </td>
                 </tr>
               ))}
-              {data.length === 0 && (
+              {clinicas.length === 0 && (
                 <tr>
                   <td colSpan={4} className="px-5 py-12 text-center text-sm" style={{ color: TEXT_DIM }}>Sin clínicas registradas</td>
                 </tr>
