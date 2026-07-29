@@ -61,4 +61,21 @@ describe("reconcilePacientes", () => {
     ]);
     expect(result.skipped).toEqual([{ fila: 1, motivo: "falta nombre" }]);
   });
+
+  it("duplicados en el lote se fusionan en una sola insercion con campos opcionales merged", () => {
+    const result = reconcilePacientes([], [
+      { nombre: "Ana Pérez", telefono: "1122334455", email: "ana@mail.com", dni: undefined },
+      { nombre: "Ana Pérez", telefono: "1122334455", email: undefined, direccion: "Calle 1" },
+    ]);
+    expect(result.toInsert).toEqual([
+      {
+        nombre: "Ana Pérez",
+        telefono: "1122334455",
+        email: "ana@mail.com",
+        direccion: "Calle 1",
+      },
+    ]);
+    expect(result.toUpdate).toEqual([]);
+    expect(result.skipped).toEqual([]);
+  });
 });

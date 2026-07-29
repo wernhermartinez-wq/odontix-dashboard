@@ -44,6 +44,7 @@ export function reconcilePacientes(
   incoming: Partial<PacienteRow>[]
 ): ReconcileResult {
   const result: ReconcileResult = { toInsert: [], toUpdate: [], skipped: [] };
+  const mergedIncoming = new Set<number>(); // Track which rows have been merged
 
   incoming.forEach((row, fila) => {
     const nombre = row.nombre?.trim();
@@ -58,12 +59,40 @@ export function reconcilePacientes(
       return;
     }
 
+    // Skip this row if it was already merged into a previous row
+    if (mergedIncoming.has(fila)) {
+      return;
+    }
+
     const match = existing.find(
       (e) => e.telefono.trim() === telefono && e.nombre.trim().toLowerCase() === nombre.toLowerCase()
     );
 
     if (!match) {
-      result.toInsert.push({ nombre, telefono, ...pickOptionalFields(row) });
+      // Merge all rows with the same telefono+nombre from incoming
+      const mergedFields: Partial<PacienteRow> = { ...pickOptionalFields(row) };
+
+      // Find all other rows with the same telefono+nombre
+      for (let i = fila + 1; i < incoming.length; i++) {
+        const otherRow = incoming[i];
+        const otherNombre = otherRow.nombre?.trim();
+        const otherTelefono = otherRow.telefono?.trim();
+
+        if (otherNombre && otherTelefono &&
+            otherTelefono === telefono &&
+            otherNombre.toLowerCase() === nombre.toLowerCase()) {
+          // Merge optional fields from this row (first non-empty wins)
+          const otherFields = pickOptionalFields(otherRow);
+          for (const field of OPTIONAL_FIELDS) {
+            if (!mergedFields[field] && otherFields[field]) {
+              mergedFields[field] = otherFields[field];
+            }
+          }
+          mergedIncoming.add(i);
+        }
+      }
+
+      result.toInsert.push({ nombre, telefono, ...mergedFields });
       return;
     }
 
