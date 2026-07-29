@@ -117,7 +117,7 @@ export default function App() {
 
   if (effectivePlan === 'basic') {
     if (effectiveRole === 'clinic' && !viewingAs) {
-      return <BasicPlanPage plan={effectivePlan} clienteId={clienteId} onSignOut={signOut} />;
+      return <BasicPlanPage plan={effectivePlan} clienteId={clienteId} onSignOut={signOut} userEmail={user?.email} />;
     }
     if (viewingAs) {
       return (
@@ -125,6 +125,7 @@ export default function App() {
           plan={effectivePlan}
           onSignOut={() => { setViewingAs(null); setCurrentPage('dashboard'); }}
           viewingAs={viewingAs}
+          userEmail={user?.email}
         />
       );
     }

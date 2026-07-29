@@ -4,13 +4,13 @@ import type { Plan } from '@/hooks/usePlan';
 import odontixLogo from '@/assets/odontixsinfondo.png';
 
 interface BotStats { totalCitas: number; citasEsteMes: number; citasHoy: number; confirmacionesEnviadas: number; }
-interface BasicPlanPageProps { clinicName?: string; plan: Plan; clienteId?: string | null; onSignOut: () => void; viewingAs?: { id: string; nombre: string } | null; }
+interface BasicPlanPageProps { clinicName?: string; plan: Plan; clienteId?: string | null; onSignOut: () => void; viewingAs?: { id: string; nombre: string } | null; userEmail?: string | null; }
 
 const TEXT_MUTED = '#4A5568';
 const TEXT_DIM = '#718096';
 const CARD = { background: '#FFFFFF', border: '1px solid #E2E8F0', borderRadius: '1rem' };
 
-export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, viewingAs }: BasicPlanPageProps) {
+export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, viewingAs, userEmail }: BasicPlanPageProps) {
   const isBasic = plan === 'basic';
   const [stats, setStats] = useState<BotStats | null>(null);
   const [loadingStats, setLoadingStats] = useState(false);
@@ -154,6 +154,9 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
         )}
 
         <div className="text-center mt-5">
+          {userEmail && (
+            <p className="text-xs mb-2 truncate" style={{ color: TEXT_DIM }}>{userEmail}</p>
+          )}
           <button onClick={onSignOut} className="text-sm transition-colors" style={{ color: TEXT_DIM }}
             onMouseEnter={e => (e.currentTarget.style.color = TEXT_MUTED)}
             onMouseLeave={e => (e.currentTarget.style.color = TEXT_DIM)}>
