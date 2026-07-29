@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import CargaPacientesModal from '@/components/admin/CargaPacientesModal';
 
 interface Clinica { id: string; nombre: string; email: string; activo: boolean; plan?: string; }
 interface AdminClinicasPageProps { onVerComo: (clinica: { id: string; nombre: string }) => void; }
@@ -31,6 +32,7 @@ export default function AdminClinicasPage({ onVerComo }: AdminClinicasPageProps)
   const [showModal, setShowModal] = useState(false);
   const [newClinica, setNewClinica] = useState({ nombre: '', email: '', telefono: '' });
   const [saving, setSaving] = useState(false);
+  const [cargaPacientesFor, setCargaPacientesFor] = useState<{ id: string; nombre: string } | null>(null);
 
   useEffect(() => { cargarClinicas(); }, []);
 
@@ -107,6 +109,11 @@ export default function AdminClinicasPage({ onVerComo }: AdminClinicasPageProps)
                   style={{ background: ps.bg, color: ps.color }}>
                   {PLANES.map(p => <option key={p} value={p}>{p.charAt(0).toUpperCase() + p.slice(1)}</option>)}
                 </select>
+                <button onClick={() => setCargaPacientesFor({ id: c.id, nombre: c.nombre })}
+                  className="text-sm font-medium whitespace-nowrap transition-colors"
+                  style={{ color: '#1A9DB5' }}>
+                  Cargar pacientes
+                </button>
                 <button onClick={() => onVerComo({ id: c.id, nombre: c.nombre })}
                   className="text-sm font-medium whitespace-nowrap transition-colors"
                   style={{ color: '#1A9DB5' }}
@@ -158,6 +165,14 @@ export default function AdminClinicasPage({ onVerComo }: AdminClinicasPageProps)
             </div>
           </div>
         </div>
+      )}
+
+      {cargaPacientesFor && (
+        <CargaPacientesModal
+          clienteId={cargaPacientesFor.id}
+          clinicaNombre={cargaPacientesFor.nombre}
+          onClose={() => setCargaPacientesFor(null)}
+        />
       )}
     </div>
   );
