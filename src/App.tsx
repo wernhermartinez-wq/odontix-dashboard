@@ -34,6 +34,21 @@ export default function App() {
   // ── DEV BYPASS ── sólo activo en localhost (import.meta.env.DEV)
   const DEV_BYPASS = import.meta.env.DEV;
 
+  // En dev: forzar rol admin si no hay sesión real
+  const effectiveRole = DEV_BYPASS && !user ? 'admin' : role;
+
+  // Los hooks deben llamarse siempre en el mismo orden en cada render.
+  // usePlan() va acá, antes de cualquier return condicional (loading /
+  // sin sesión) — moverlo después de esos returns causaba "Rendered more
+  // hooks than during the previous render" (React error #310) en
+  // producción real, porque la cantidad de hooks llamados cambiaba entre
+  // el render de loading/login y el render ya autenticado. En dev,
+  // DEV_BYPASS ocultaba el bug porque esos returns tempranos nunca se
+  // ejecutaban.
+  const { plan, loading: planLoading } = usePlan(
+    effectiveRole === 'clinic' || viewingAs ? activeClienteId : null
+  );
+
   if (!DEV_BYPASS && authLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ background: BG }}>
@@ -46,13 +61,6 @@ export default function App() {
   }
 
   if (!DEV_BYPASS && !user) return <LoginPage />;
-
-  // En dev: forzar rol admin si no hay sesión real
-  const effectiveRole = DEV_BYPASS && !user ? 'admin' : role;
-
-  const { plan, loading: planLoading } = usePlan(
-    effectiveRole === 'clinic' || viewingAs ? activeClienteId : null
-  );
 
   // ADMIN PANEL
   if (effectiveRole === 'admin' && !viewingAs) {
