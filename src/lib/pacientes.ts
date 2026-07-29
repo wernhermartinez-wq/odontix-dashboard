@@ -1,3 +1,5 @@
+import { supabase } from "@/lib/supabase";
+
 export interface PacienteRow {
   nombre: string;
   telefono: string;
@@ -109,4 +111,39 @@ export function reconcilePacientes(
   });
 
   return result;
+}
+
+export async function importPacientes(
+  clienteId: string,
+  incoming: Partial<PacienteRow>[]
+): Promise<{ nuevos: number; actualizados: number; omitidos: { fila: number; motivo: string }[] }> {
+  const { data: existingData, error: fetchError } = await supabase
+    .from("pacientes")
+    .select("id, nombre, telefono, email, fecha_nacimiento, dni, genero, cobertura, direccion, notas_medicas")
+    .eq("cliente_id", clienteId);
+
+  if (fetchError) {
+    throw new Error(`No se pudo leer pacientes existentes: ${fetchError.message}`);
+  }
+
+  const existing = (existingData ?? []) as ExistingPaciente[];
+  const { toInsert, toUpdate, skipped } = reconcilePacientes(existing, incoming);
+
+  if (toInsert.length > 0) {
+    const { error: insertError } = await supabase
+      .from("pacientes")
+      .insert(toInsert.map((p) => ({ ...p, cliente_id: clienteId })));
+    if (insertError) {
+      throw new Error(`Error insertando pacientes nuevos: ${insertError.message}`);
+    }
+  }
+
+  for (const { id, changes } of toUpdate) {
+    const { error: updateError } = await supabase.from("pacientes").update(changes).eq("id", id);
+    if (updateError) {
+      throw new Error(`Error actualizando paciente ${id}: ${updateError.message}`);
+    }
+  }
+
+  return { nuevos: toInsert.length, actualizados: toUpdate.length, omitidos: skipped };
 }
