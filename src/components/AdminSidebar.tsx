@@ -8,6 +8,7 @@ interface AdminSidebarProps {
   viewingAs: { id: string; nombre: string } | null;
   onExitViewAs: () => void;
   onSignOut: () => void;
+  userEmail?: string | null;
 }
 
 const navItems = [
@@ -47,7 +48,7 @@ const activeStyle = {
 };
 const inactiveStyle = { color: 'rgba(240,240,245,0.45)' };
 
-export default function AdminSidebar({ currentPage, onNavigate, viewingAs, onExitViewAs, onSignOut }: AdminSidebarProps) {
+export default function AdminSidebar({ currentPage, onNavigate, viewingAs, onExitViewAs, onSignOut, userEmail }: AdminSidebarProps) {
   return (
     <aside style={{ background: 'linear-gradient(175deg, #071a1f 0%, #0a2530 55%, #0d3040 100%)', borderRight: '1px solid rgba(19,122,140,0.15)' }} className="w-64 flex-shrink-0 flex flex-col h-full">
       {/* Logo */}
@@ -112,6 +113,11 @@ export default function AdminSidebar({ currentPage, onNavigate, viewingAs, onExi
 
       {/* Sign out */}
       <div className="px-3 py-4" style={{ borderTop: '1px solid rgba(19,122,140,0.12)' }}>
+        {userEmail && (
+          <div className="text-[11px] px-1 mb-2 truncate" style={{ color: 'rgba(240,240,245,0.4)' }} title={userEmail}>
+            {userEmail}
+          </div>
+        )}
         <button
           onClick={onSignOut}
           className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-[13px] transition-all"

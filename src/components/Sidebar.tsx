@@ -33,9 +33,10 @@ interface SidebarProps {
   plan: Plan;
   isAdmin?: boolean;
   viewingAs?: { id: string; nombre: string } | null;
+  userEmail?: string | null;
 }
 
-export default function Sidebar({ currentPage, onNavigate, isOpen, onClose, onSignOut, plan, isAdmin, viewingAs }: SidebarProps) {
+export default function Sidebar({ currentPage, onNavigate, isOpen, onClose, onSignOut, plan, isAdmin, viewingAs, userEmail }: SidebarProps) {
   const badge = plan ? planBadge[plan] : null;
 
   const activeStyle = {
@@ -133,6 +134,11 @@ export default function Sidebar({ currentPage, onNavigate, isOpen, onClose, onSi
         {isAdmin && viewingAs && (
           <div className="text-xs text-orange-400 px-1 mb-1">
             Admin - Viendo como {viewingAs.nombre}
+          </div>
+        )}
+        {userEmail && (
+          <div className="text-[11px] px-1 mb-1 truncate" style={{ color: 'rgba(240,240,245,0.4)' }} title={userEmail}>
+            {userEmail}
           </div>
         )}
         <button

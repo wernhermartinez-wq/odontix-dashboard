@@ -94,6 +94,7 @@ export default function App() {
           viewingAs={null}
           onExitViewAs={() => setViewingAs(null)}
           onSignOut={signOut}
+          userEmail={user?.email}
         />
         <main className="flex-1 overflow-y-auto overflow-x-hidden">
           {renderAdminPage()}
@@ -169,6 +170,7 @@ export default function App() {
         plan={plan}
         isAdmin={effectiveRole === 'admin'}
         viewingAs={viewingAs}
+        userEmail={user?.email}
       />
 
       <div className={`flex-1 flex flex-col min-w-0 overflow-hidden ${viewingAs ? 'pt-8' : ''}`}>
