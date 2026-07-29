@@ -136,7 +136,7 @@ export default function App() {
     switch (currentPage) {
       case "dashboard":  return <DashboardPage clienteId={activeClienteId} plan={plan} />;
       case "agenda":     return <AgendaPage />;
-      case "patients":   return <PatientsPage />;
+      case "patients":   return <PatientsPage clienteId={activeClienteId} />;
       case "absences":   return <AbsencesPage />;
       case "followups":  return <FollowUpsPage plan={plan} />;
       case "stats":      return <StatsPage plan={plan} />;
