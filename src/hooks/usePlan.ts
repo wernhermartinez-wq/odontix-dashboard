@@ -13,6 +13,13 @@ export function usePlan(clienteId: string | null): { plan: Plan; loading: boolea
       return;
     }
 
+    // Sin esto, "loading" quedaba en el valor del fetch anterior (false)
+    // mientras se resolvía el nuevo cliente_id — App.tsx usaba ese falso
+    // "ya cargó" para caer al plan por defecto ('basic') y montaba
+    // BasicPlanPage de pasada, incluso para clínicas Premium, disparando
+    // sus queries reales con el plan equivocado.
+    setLoading(true);
+
     supabase
       .from('odontix_config')
       .select('plan')

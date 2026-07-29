@@ -24,11 +24,15 @@ export default function BasicPlanPage({ clinicName, plan, clienteId, onSignOut, 
       const now = new Date();
       const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString().split('T')[0];
       const today = now.toISOString().split('T')[0];
+      const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      // Columnas reales de la tabla citas: fecha_inicio (timestamptz) y
+      // confirmado_whatsapp — no "fecha"/"confirmacion_enviada" (esquema
+      // Agentix, distinto al asumido originalmente).
       const [totalRes, mesRes, hoyRes, confirmRes] = await Promise.all([
         supabase.from('citas').select('id', { count: 'exact', head: true }).eq('cliente_id', effectiveClienteId),
-        supabase.from('citas').select('id', { count: 'exact', head: true }).eq('cliente_id', effectiveClienteId).gte('fecha', startOfMonth),
-        supabase.from('citas').select('id', { count: 'exact', head: true }).eq('cliente_id', effectiveClienteId).eq('fecha', today),
-        supabase.from('citas').select('id', { count: 'exact', head: true }).eq('cliente_id', effectiveClienteId).eq('confirmacion_enviada', true),
+        supabase.from('citas').select('id', { count: 'exact', head: true }).eq('cliente_id', effectiveClienteId).gte('fecha_inicio', startOfMonth),
+        supabase.from('citas').select('id', { count: 'exact', head: true }).eq('cliente_id', effectiveClienteId).gte('fecha_inicio', today).lt('fecha_inicio', tomorrow),
+        supabase.from('citas').select('id', { count: 'exact', head: true }).eq('cliente_id', effectiveClienteId).eq('confirmado_whatsapp', true),
       ]);
       setStats({ totalCitas: totalRes.count ?? 0, citasEsteMes: mesRes.count ?? 0, citasHoy: hoyRes.count ?? 0, confirmacionesEnviadas: confirmRes.count ?? 0 });
     } catch { setStats({ totalCitas: 0, citasEsteMes: 0, citasHoy: 0, confirmacionesEnviadas: 0 }); }
