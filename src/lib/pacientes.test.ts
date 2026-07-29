@@ -78,4 +78,18 @@ describe("reconcilePacientes", () => {
     expect(result.toUpdate).toEqual([]);
     expect(result.skipped).toEqual([]);
   });
+
+  it("un existing con nombre o telefono NULL no lanza y una fila nueva genuina va a toInsert", () => {
+    const existing: ExistingPaciente[] = [
+      { id: "p1", nombre: null as unknown as string, telefono: null as unknown as string, email: "viejo@mail.com" },
+    ];
+    expect(() =>
+      reconcilePacientes(existing, [{ nombre: "Ana Pérez", telefono: "1122334455" }])
+    ).not.toThrow();
+
+    const result = reconcilePacientes(existing, [{ nombre: "Ana Pérez", telefono: "1122334455" }]);
+    expect(result.toInsert).toEqual([{ nombre: "Ana Pérez", telefono: "1122334455" }]);
+    expect(result.toUpdate).toEqual([]);
+    expect(result.skipped).toEqual([]);
+  });
 });

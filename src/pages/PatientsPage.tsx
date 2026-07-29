@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase";
-import { importPacientes, type ExistingPaciente } from "@/lib/pacientes";
+import { fetchAllPacientes, importPacientes, type ExistingPaciente } from "@/lib/pacientes";
 
 const CARD = { background: "#ffffff", border: "1px solid rgba(0,0,0,0.07)", borderRadius: "0.875rem" } as const;
 const MUTED = "#5c5c6b";
@@ -36,22 +35,26 @@ export default function PatientsPage({ clienteId }: PatientsPageProps) {
   const [guardando, setGuardando] = useState(false);
   const [errorCarga, setErrorCarga] = useState<string | null>(null);
   const [errorNuevo, setErrorNuevo] = useState<string | null>(null);
+  const [infoNuevo, setInfoNuevo] = useState<string | null>(null);
 
-  useEffect(() => { if (clienteId) cargarPacientes(); }, [clienteId]);
+  useEffect(() => {
+    if (clienteId) {
+      cargarPacientes();
+    } else {
+      setLoading(false);
+      setErrorCarga("No hay una clínica asociada a tu cuenta.");
+    }
+  }, [clienteId]);
 
   async function cargarPacientes() {
     setLoading(true);
-    const { data, error } = await supabase
-      .from("pacientes")
-      .select("id, nombre, telefono, email, fecha_nacimiento, dni, genero, cobertura, direccion, notas_medicas")
-      .eq("cliente_id", clienteId)
-      .order("nombre");
-    if (error) {
+    try {
+      const data = await fetchAllPacientes(clienteId as string);
+      setErrorCarga(null);
+      setPacientes([...data].sort((a, b) => (a.nombre ?? "").localeCompare(b.nombre ?? "")));
+    } catch {
       setErrorCarga("No se pudieron cargar los pacientes.");
       setPacientes([]);
-    } else {
-      setErrorCarga(null);
-      setPacientes((data ?? []) as ExistingPaciente[]);
     }
     setLoading(false);
   }
@@ -60,11 +63,21 @@ export default function PatientsPage({ clienteId }: PatientsPageProps) {
     if (!clienteId) return;
     setGuardando(true);
     setErrorNuevo(null);
+    setInfoNuevo(null);
     try {
-      await importPacientes(clienteId, [nuevoForm]);
+      const resultado = await importPacientes(clienteId, [nuevoForm]);
+      if (resultado.omitidos.length > 0) {
+        setErrorNuevo("No se pudo guardar: falta nombre o teléfono.");
+        return;
+      }
       await cargarPacientes();
       setNuevoForm({ nombre: "", telefono: "", email: "", dni: "" });
       setShowNuevo(false);
+      if (resultado.actualizados > 0) {
+        setInfoNuevo("Ya existía un paciente con ese nombre y teléfono: se actualizaron sus datos.");
+      } else {
+        setInfoNuevo("Paciente creado.");
+      }
     } catch (e) {
       setErrorNuevo(e instanceof Error ? e.message : "No se pudo guardar el paciente.");
     } finally {
@@ -73,14 +86,14 @@ export default function PatientsPage({ clienteId }: PatientsPageProps) {
   }
 
   const filtered = pacientes.filter((p) =>
-    p.nombre.toLowerCase().includes(search.toLowerCase()) ||
-    p.telefono.includes(search) ||
+    (p.nombre ?? "").toLowerCase().includes(search.toLowerCase()) ||
+    (p.telefono ?? "").includes(search) ||
     (p.email ?? "").toLowerCase().includes(search.toLowerCase())
   );
 
-  const initials = (name: string) => name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+  const initials = (name: string) => (name ?? "").split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   const avatarColors = ["#1a9db5", "#38A169", "#3dc0d8", "#FFBB00", "#E53E3E"];
-  const avatarColor = (name: string) => avatarColors[name.charCodeAt(0) % avatarColors.length];
+  const avatarColor = (name: string) => avatarColors[(name ?? "").charCodeAt(0) % avatarColors.length || 0];
 
   return (
     <div style={{ padding: "1.5rem", maxWidth: "80rem", margin: "0 auto" }} className="space-y-5">
@@ -151,7 +164,7 @@ export default function PatientsPage({ clienteId }: PatientsPageProps) {
             <div className="flex gap-3 mt-5">
               <button onClick={() => { setShowNuevo(false); setErrorNuevo(null); }} style={{ flex: 1, padding: "0.6rem", borderRadius: "0.625rem", border: `1px solid ${BORDER}`, color: MUTED }}>Cancelar</button>
               <button
-                disabled={!nuevoForm.nombre || !nuevoForm.telefono || guardando}
+                disabled={!nuevoForm.nombre.trim() || !nuevoForm.telefono.trim() || guardando}
                 onClick={guardarNuevoPaciente}
                 style={{ flex: 1, padding: "0.6rem", borderRadius: "0.625rem", background: "#1a9db5", color: "#fff" }}
                 className="disabled:opacity-40"
@@ -168,10 +181,21 @@ export default function PatientsPage({ clienteId }: PatientsPageProps) {
           <h1 style={{ fontSize: "1.25rem", fontWeight: 700, color: "#1a1a1f", marginBottom: "0.2rem" }}>Pacientes</h1>
           <p style={{ color: MUTED, fontSize: "0.875rem" }}>{pacientes.length} pacientes registrados</p>
         </div>
-        <button onClick={() => setShowNuevo(true)} style={{ background: "#1a9db5", color: "#fff", padding: "0.5rem 1rem", borderRadius: "0.5rem", fontSize: "0.875rem", fontWeight: 600 }}>
+        <button
+          disabled={!clienteId}
+          onClick={() => { setInfoNuevo(null); setShowNuevo(true); }}
+          style={{ background: "#1a9db5", color: "#fff", padding: "0.5rem 1rem", borderRadius: "0.5rem", fontSize: "0.875rem", fontWeight: 600 }}
+          className="disabled:opacity-40"
+        >
           + Nuevo paciente
         </button>
       </div>
+
+      {infoNuevo && (
+        <div style={{ background: "rgba(56,161,105,0.08)", color: "#38A169", borderRadius: "0.5rem", padding: "0.625rem 0.875rem", fontSize: "0.8rem" }}>
+          {infoNuevo}
+        </div>
+      )}
 
       <div style={{ ...CARD, padding: "1rem" }}>
         <input

@@ -186,7 +186,10 @@ export default function CargaPacientesModal({ clienteId, clinicaNombre, onClose 
             </div>
             {resultado.omitidos.length > 0 && (
               <div className="text-xs mb-4" style={{ color: "#718096" }}>
-                Filas omitidas: {resultado.omitidos.map((o) => `#${o.fila + 1} (${o.motivo})`).join(", ")}
+                {/* o.fila is a 0-based index into rows AFTER the header row was stripped by
+                    parseSpreadsheetFile, so the true spreadsheet line is fila + 2: +1 to make it
+                    1-based, +1 more to account for the header row occupying line 1. */}
+                Filas omitidas: {resultado.omitidos.map((o) => `#${o.fila + 2} (${o.motivo})`).join(", ")}
               </div>
             )}
             <button onClick={onClose} className="w-full text-sm px-4 py-2 rounded-lg text-white" style={{ background: "#1A9DB5" }}>

@@ -67,7 +67,7 @@ export function reconcilePacientes(
     }
 
     const match = existing.find(
-      (e) => e.telefono.trim() === telefono && e.nombre.trim().toLowerCase() === nombre.toLowerCase()
+      (e) => (e.telefono ?? "").trim() === telefono && (e.nombre ?? "").trim().toLowerCase() === nombre.toLowerCase()
     );
 
     if (!match) {
@@ -113,20 +113,38 @@ export function reconcilePacientes(
   return result;
 }
 
+const PACIENTES_SELECT_FIELDS =
+  "id, nombre, telefono, email, fecha_nacimiento, dni, genero, cobertura, direccion, notas_medicas";
+
+/**
+ * Fetches every paciente row for a cliente, paginating past Supabase's default
+ * max-rows-per-request cap (1000) so clinics with more than 1000 patients
+ * don't get silently truncated results (which caused duplicate inserts on
+ * re-import).
+ */
+export async function fetchAllPacientes(clienteId: string): Promise<ExistingPaciente[]> {
+  const PAGE_SIZE = 1000;
+  const all: ExistingPaciente[] = [];
+  let from = 0;
+  while (true) {
+    const { data, error } = await supabase
+      .from("pacientes")
+      .select(PACIENTES_SELECT_FIELDS)
+      .eq("cliente_id", clienteId)
+      .range(from, from + PAGE_SIZE - 1);
+    if (error) throw new Error(`No se pudo leer pacientes existentes: ${error.message}`);
+    all.push(...((data ?? []) as ExistingPaciente[]));
+    if (!data || data.length < PAGE_SIZE) break;
+    from += PAGE_SIZE;
+  }
+  return all;
+}
+
 export async function importPacientes(
   clienteId: string,
   incoming: Partial<PacienteRow>[]
 ): Promise<{ nuevos: number; actualizados: number; omitidos: { fila: number; motivo: string }[] }> {
-  const { data: existingData, error: fetchError } = await supabase
-    .from("pacientes")
-    .select("id, nombre, telefono, email, fecha_nacimiento, dni, genero, cobertura, direccion, notas_medicas")
-    .eq("cliente_id", clienteId);
-
-  if (fetchError) {
-    throw new Error(`No se pudo leer pacientes existentes: ${fetchError.message}`);
-  }
-
-  const existing = (existingData ?? []) as ExistingPaciente[];
+  const existing = await fetchAllPacientes(clienteId);
   const { toInsert, toUpdate, skipped } = reconcilePacientes(existing, incoming);
 
   if (toInsert.length > 0) {
@@ -139,7 +157,11 @@ export async function importPacientes(
   }
 
   for (const { id, changes } of toUpdate) {
-    const { error: updateError } = await supabase.from("pacientes").update(changes).eq("id", id);
+    const { error: updateError } = await supabase
+      .from("pacientes")
+      .update(changes)
+      .eq("id", id)
+      .eq("cliente_id", clienteId);
     if (updateError) {
       throw new Error(`Error actualizando paciente ${id}: ${updateError.message}`);
     }
