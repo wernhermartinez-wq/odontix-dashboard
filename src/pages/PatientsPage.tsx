@@ -34,28 +34,42 @@ export default function PatientsPage({ clienteId }: PatientsPageProps) {
   const [showNuevo, setShowNuevo] = useState(false);
   const [nuevoForm, setNuevoForm] = useState({ nombre: "", telefono: "", email: "", dni: "" });
   const [guardando, setGuardando] = useState(false);
+  const [errorCarga, setErrorCarga] = useState<string | null>(null);
+  const [errorNuevo, setErrorNuevo] = useState<string | null>(null);
 
   useEffect(() => { if (clienteId) cargarPacientes(); }, [clienteId]);
 
   async function cargarPacientes() {
     setLoading(true);
-    const { data } = await supabase
+    const { data, error } = await supabase
       .from("pacientes")
       .select("id, nombre, telefono, email, fecha_nacimiento, dni, genero, cobertura, direccion, notas_medicas")
       .eq("cliente_id", clienteId)
       .order("nombre");
-    setPacientes((data ?? []) as ExistingPaciente[]);
+    if (error) {
+      setErrorCarga("No se pudieron cargar los pacientes.");
+      setPacientes([]);
+    } else {
+      setErrorCarga(null);
+      setPacientes((data ?? []) as ExistingPaciente[]);
+    }
     setLoading(false);
   }
 
   async function guardarNuevoPaciente() {
     if (!clienteId) return;
     setGuardando(true);
-    await importPacientes(clienteId, [nuevoForm]);
-    await cargarPacientes();
-    setNuevoForm({ nombre: "", telefono: "", email: "", dni: "" });
-    setShowNuevo(false);
-    setGuardando(false);
+    setErrorNuevo(null);
+    try {
+      await importPacientes(clienteId, [nuevoForm]);
+      await cargarPacientes();
+      setNuevoForm({ nombre: "", telefono: "", email: "", dni: "" });
+      setShowNuevo(false);
+    } catch (e) {
+      setErrorNuevo(e instanceof Error ? e.message : "No se pudo guardar el paciente.");
+    } finally {
+      setGuardando(false);
+    }
   }
 
   const filtered = pacientes.filter((p) =>
@@ -117,6 +131,11 @@ export default function PatientsPage({ clienteId }: PatientsPageProps) {
         <div style={{ position: "fixed", inset: 0, background: "rgba(0,0,0,0.4)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center", padding: "1rem" }}>
           <div style={{ background: "#ffffff", borderRadius: "1rem", maxWidth: "28rem", width: "100%", padding: "1.5rem" }}>
             <h2 style={{ color: "#1a1a1f", fontWeight: 700, fontSize: "1.1rem", marginBottom: "1rem" }}>Nuevo paciente</h2>
+            {errorNuevo && (
+              <div style={{ background: "rgba(229,62,62,0.08)", color: "#E53E3E", borderRadius: "0.5rem", padding: "0.625rem 0.75rem", fontSize: "0.8rem", marginBottom: "0.75rem" }}>
+                {errorNuevo}
+              </div>
+            )}
             <div className="space-y-3">
               {CAMPOS_FORM.map((f) => (
                 <div key={f.key}>
@@ -130,7 +149,7 @@ export default function PatientsPage({ clienteId }: PatientsPageProps) {
               ))}
             </div>
             <div className="flex gap-3 mt-5">
-              <button onClick={() => setShowNuevo(false)} style={{ flex: 1, padding: "0.6rem", borderRadius: "0.625rem", border: `1px solid ${BORDER}`, color: MUTED }}>Cancelar</button>
+              <button onClick={() => { setShowNuevo(false); setErrorNuevo(null); }} style={{ flex: 1, padding: "0.6rem", borderRadius: "0.625rem", border: `1px solid ${BORDER}`, color: MUTED }}>Cancelar</button>
               <button
                 disabled={!nuevoForm.nombre || !nuevoForm.telefono || guardando}
                 onClick={guardarNuevoPaciente}
@@ -178,6 +197,8 @@ export default function PatientsPage({ clienteId }: PatientsPageProps) {
             <tbody>
               {loading ? (
                 <tr><td colSpan={5} style={{ textAlign: "center", padding: "3rem", color: MUTED }}>Cargando…</td></tr>
+              ) : errorCarga ? (
+                <tr><td colSpan={5} style={{ textAlign: "center", padding: "3rem", color: "#E53E3E" }}>{errorCarga}</td></tr>
               ) : filtered.length === 0 ? (
                 <tr><td colSpan={5} style={{ textAlign: "center", padding: "3rem", color: MUTED }}>No se encontraron pacientes</td></tr>
               ) : filtered.map((p) => {
